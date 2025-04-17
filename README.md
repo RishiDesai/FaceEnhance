@@ -1,6 +1,17 @@
 # FaceEnhance
 Enhancing faces in AI generated images.
 
+<div style="display: flex; justify-content: space-around;">
+  <div>
+    <h4>Before</h4>
+    <img src="examples/chatgpt_elon.png" alt="Elon Before" width="300"/>
+  </div>
+  <div>
+    <h4>After</h4>
+    <img src="examples/enhanced_elon.png" alt="Elon After" width="300"/>
+  </div>
+</div>
+
 ## Installation
 
 ### Prerequisites
@@ -11,33 +22,29 @@ Enhancing faces in AI generated images.
 ### Setup
 
 1. Set up your Hugging Face token:
-   - Create a token at [Hugging Face](https://huggingface.co/settings/tokens) set it as an environment variable.
+   - Create a token at [Hugging Face](https://huggingface.co/settings/tokens)
    - Set the token as an environment variable. HuggingFace requires login for downloading Flux:
      ```
      export HUGGINGFACE_TOKEN=your_token_here
+     export HF_HOME=/path/to/your/huggingface_cache
      ```
-    - Set the Hugging Face cache directory:
-      ```
-      export HF_HOME=/path/to/your/huggingface_cache
-      ```
-      Models will be downloaded here and then symlinked to ./ComfyUI/models/.
+   - Models will be downloaded to `$HF_HOME` and then symlinked to `./ComfyUI/models/`
 
-2. Create virtual environment:
+2. Create the virtual environment:
    ```
    python -m venv venv
    source venv/bin/activate
    python -m pip install -r requirements.txt
    ```
 
-3. Run installation script:
+3. Run the install script:
    ```
    python install.py
    ```
 
-This script will:
-- Install all required dependencies to your venv
-- Install ComfyUI and required custom nodes
-- Download and install all required models (Flux.1-dev, ControlNet, text encoders, PuLID, and more)
+This will
+- Install ComfyUI, custom nodes, and required dependencies to your venv
+- Download all required models (Flux.1-dev, ControlNet, text encoders, PuLID, and more)
 
 ## Configuration
 
@@ -67,16 +74,7 @@ ssh -L 7860:localhost:7860 root@[IP_ADDRESS] -p [SERVER_PORT] -i [PRIVATE_KEY]
 
 3. Go to http://localhost:7860
 
-## Usage
-
-1. Upload an input image you want to enhance
-2. Upload a high-quality reference face image
-3. Click "Enhance Face" to start the process
-4. Wait approximately 60 seconds for processing
-5. View the enhanced result in the output panel
-
-## Notes
-
-- The script runs a ComfyUI server ephemerally
+### Notes
+- The script and demo run a ComfyUI server ephemerally
 - All images are saved in ./ComfyUI/input/scratch/
 - Temporary files are created during processing and cleaned up afterward
