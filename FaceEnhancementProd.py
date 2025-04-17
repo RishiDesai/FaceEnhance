@@ -61,7 +61,7 @@ def add_comfyui_directory_to_sys_path() -> None:
     """
     Add 'ComfyUI' to the sys.path
     """
-    return COMFYUI_PATH
+    sys.path.append(COMFYUI_PATH)
 
 
 def add_extra_model_paths() -> None:
@@ -126,7 +126,13 @@ from nodes import (
 )
 
 
-def main():
+def main(
+    face_image: str,
+    input_image: str,
+    output_image: str,
+    dist_image: str = None,
+    positive_prompt: str = ""
+):
     import_custom_nodes()
     with torch.inference_mode():
         dualcliploader = DualCLIPLoader()
@@ -143,9 +149,9 @@ def main():
         )
 
         loadimage = LoadImage()
-        loadimage_24 = loadimage.load_image(image="woman_face.jpg")
+        loadimage_24 = loadimage.load_image(image=face_image)
 
-        loadimage_40 = loadimage.load_image(image="woman1_gpt_2.png")
+        loadimage_40 = loadimage.load_image(image=input_image)
 
         vaeloader = VAELoader()
         vaeloader_95 = vaeloader.load_vae(vae_name="ae.safetensors")
@@ -160,7 +166,7 @@ def main():
         randomnoise_39 = randomnoise.get_noise(noise_seed=random.randint(1, 2**64))
 
         cliptextencode_42 = cliptextencode.encode(
-            text="", clip=get_value_at_index(dualcliploader_94, 0)
+            text=positive_prompt, clip=get_value_at_index(dualcliploader_94, 0)
         )
 
         pulidfluxmodelloader = NODE_CLASS_MAPPINGS["PulidFluxModelLoader"]()
@@ -277,16 +283,50 @@ def main():
             source=get_value_at_index(faceembeddistance_117, 1)
         )
 
-        saveimage_128 = saveimage.save_images(
-            filename_prefix="FaceEnhanced",
-            images=get_value_at_index(vaedecode_114, 0),
-        )
+        # Save using direct image saving
+        save_comfy_images(get_value_at_index(vaedecode_114, 0), [output_image])
+        if dist_image:
+            save_comfy_images(get_value_at_index(faceembeddistance_117, 0), [dist_image])
 
-        saveimage_129 = saveimage.save_images(
-            filename_prefix="FaceEmbedDist",
-            images=get_value_at_index(faceembeddistance_117, 0),
-        )
 
+def save_comfy_images(images, output_dirs):
+    # images is a PyTorch tensor with shape [batch_size, height, width, channels]
+    import numpy as np
+    from PIL import Image
+    
+    for idx, image in enumerate(images):
+        # Create the output directory if it doesn't exist
+        output_dir = os.path.dirname(output_dirs[idx])
+        if output_dir and not os.path.exists(output_dir):
+            os.makedirs(output_dir, exist_ok=True)
+            
+        numpy_image = 255. * image.cpu().numpy()
+        numpy_image = np.clip(numpy_image, 0, 255).astype(np.uint8)
+        pil_image = Image.fromarray(numpy_image)
+        pil_image.save(output_dirs[idx])
+
+
+def enhance_face(face_image: str, input_image: str, output_image: str, dist_image: str = None, positive_prompt: str = ""):
+    main(face_image, input_image, output_image, dist_image, positive_prompt)
 
 if __name__ == "__main__":
-    main()
+    import sys
+    
+    if len(sys.argv) < 4:
+        print("Usage: python FaceEnhancementProd.py face_image input_image output_image [dist_image] [positive_prompt]")
+        sys.exit(1)
+    
+    face_image = sys.argv[1]
+    input_image = sys.argv[2]
+    output_image = sys.argv[3]
+    
+    dist_image = None
+    positive_prompt = ""
+    
+    if len(sys.argv) > 4:
+        dist_image = sys.argv[4]
+    
+    if len(sys.argv) > 5:
+        positive_prompt = sys.argv[5]
+    
+    main(face_image, input_image, output_image, dist_image, positive_prompt)
