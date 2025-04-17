@@ -1,5 +1,6 @@
 venv
 .env
 .idea/
+.gradio/
 __pycache__/
 ComfyUI/
