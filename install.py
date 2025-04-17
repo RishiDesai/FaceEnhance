@@ -20,17 +20,6 @@ def run_command(command):
         exit(1)  # Exit on failure
 
 
-# def install_dependencies():
-#     """Install system dependencies and Python packages."""
-#     print("📦 Installing dependencies...")
-#     # run_command("apt-get update && apt-get install -y git wget curl libgl1-mesa-glx libglib2.0-0 tmux emacs git-lfs")
-#     run_command("pip install --upgrade pip")
-#     run_command("pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124")
-#     run_command("pip install xformers --index-url https://download.pytorch.org/whl/cu124")
-#     # run_command("pip install -r requirements.txt")
-#     print("✅ Dependencies installed.")
-
-
 def manage_git_repo(repo_url, install_path, requirements=False, submodules=False):
     """Clone or update a git repository and handle its dependencies.
 
@@ -75,7 +64,7 @@ def install_comfyui():
     )
 
 def download_huggingface_models():
-    """Download required models from Hugging Face."""
+    """Download required models from Hugging Face and symlink to ComfyUI models directory."""
     from huggingface_hub import hf_hub_download
     hf_models = [
         {"repo_id": "black-forest-labs/FLUX.1-dev", "filename": "flux1-dev.safetensors", "folder": "unet"},
@@ -118,15 +107,21 @@ def download_huggingface_models():
 
 def download_and_extract_antelopev2():
     """Download and extract AntelopeV2 model for insightface."""
-    import zipfile, requests
-    base_path = os.path.join(BASE_PATH, "models/insightface/models")
+    import zipfile, requests, shutil
+    
+    base_path = os.path.join(MODEL_PATH, "insightface/models")
+    model_target_path = os.path.join(base_path, "antelopev2")
     download_url = "https://huggingface.co/MonsterMMORPG/tools/resolve/main/antelopev2.zip"
     zip_path = os.path.join(base_path, "antelopev2.zip")
-    extract_path = os.path.join(base_path, "antelopev2")
-
+    temp_extract_path = os.path.join(base_path, "temp_antelopev2")
+    
     os.makedirs(base_path, exist_ok=True)
 
-    if not os.path.exists(extract_path):
+    if not os.path.exists(model_target_path) or not os.listdir(model_target_path):
+        # First, remove any existing problematic directories
+        if os.path.exists(model_target_path):
+            shutil.rmtree(model_target_path)
+            
         print(f"📥 Downloading AntelopeV2 model...")
         try:
             response = requests.get(download_url, stream=True)
@@ -136,13 +131,35 @@ def download_and_extract_antelopev2():
                     file.write(chunk)
             print("✅ Download complete.")
 
+            # Create a temporary extraction directory
+            os.makedirs(temp_extract_path, exist_ok=True)
+            
             print("📂 Extracting AntelopeV2 model...")
             with zipfile.ZipFile(zip_path, "r") as zip_ref:
-                zip_ref.extractall(base_path)
+                zip_ref.extractall(temp_extract_path)
             print("✅ Extraction complete.")
-
-            os.remove(zip_path)
-            print("🗑️ Cleaned up ZIP file.")
+            
+            # Create the target directory
+            os.makedirs(model_target_path, exist_ok=True)
+            
+            # Move the model files to the correct location
+            # The ZIP contains a nested antelopev2 directory we need to move files from
+            nested_model_dir = os.path.join(temp_extract_path, "antelopev2")
+            if os.path.exists(nested_model_dir):
+                for item in os.listdir(nested_model_dir):
+                    source = os.path.join(nested_model_dir, item)
+                    target = os.path.join(model_target_path, item)
+                    shutil.move(source, target)
+            
+            # Clean up
+            if os.path.exists(temp_extract_path):
+                shutil.rmtree(temp_extract_path)
+            if os.path.exists(zip_path):
+                os.remove(zip_path)
+                
+            print("🗑️ Cleaned up temporary files.")
+            print("✅ AntelopeV2 model installed correctly.")
+            
         except Exception as e:
             print(f"❌ Failed to download/extract AntelopeV2: {e}")
     else:
@@ -159,8 +176,8 @@ def install_custom_nodes():
             "requirements": True
         },
         {
-            "repo": "https://github.com/balazik/ComfyUI-PuLID-Flux",
-            "name": "ComfyUI-PuLID-Flux",
+            "repo": "https://github.com/sipie800/ComfyUI-PuLID-Flux-Enhanced",
+            "name": "ComfyUI-PuLID-Flux-Enhanced",
             "requirements": True
         },
         {
@@ -190,8 +207,8 @@ def install_custom_nodes():
 
 
 if __name__ == "__main__":
-    # install_dependencies()
     # install_comfyui()
+    # install_custom_nodes()
     # download_huggingface_models()
-    install_custom_nodes()
+    # download_and_extract_antelopev2()
     print("🎉 Setup Complete! Run `run.py` to start ComfyUI.")
