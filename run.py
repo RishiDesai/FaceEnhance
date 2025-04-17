@@ -15,5 +15,4 @@ def run_comfyui():
 
 if __name__ == "__main__":
     run_comfyui()
-    print(
-        f"Now run port-forwarding\nssh -L {PORT}:localhost:{PORT} root@[IP_ADDRESS] -p [RUNPOD_PORT] -i ~/.ssh/[PRIVATE_KEY_NAME]")
+    print(f"Enable port-forwarding\nssh -L {PORT}:localhost:{PORT} [NAME]@[IP_ADDRESS] -p [SERVER_PORT] -i [PRIVATE_KEY]")
