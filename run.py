@@ -4,6 +4,7 @@ import subprocess
 COMFYUI_PATH = "./ComfyUI"
 PORT = 8000
 
+
 def run_comfyui():
     """Launch ComfyUI with external access."""
     os.chdir(COMFYUI_PATH)
@@ -11,6 +12,8 @@ def run_comfyui():
 
     subprocess.run(f"python main.py --listen 0.0.0.0 --port {PORT} --disable-auto-launch", shell=True)
 
+
 if __name__ == "__main__":
     run_comfyui()
-    print(f"Now run port-forwarding\nssh -L {PORT}:localhost:{PORT} root@[IP_ADDRESS] -p [RUNPOD_PORT] -i ~/.ssh/[PRIVATE_KEY_NAME]")
+    print(
+        f"Now run port-forwarding\nssh -L {PORT}:localhost:{PORT} root@[IP_ADDRESS] -p [RUNPOD_PORT] -i ~/.ssh/[PRIVATE_KEY_NAME]")
