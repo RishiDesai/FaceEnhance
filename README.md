@@ -20,20 +20,36 @@ Enhancing faces in AI generated images.
    ```
    export HF_HOME=/path/to/your/huggingface_cache
    ```
-   This defines where models will be downloaded and later symlinked to the ComfyUI folder.
+   This defines where models will be downloaded and then symlinked to the ComfyUI folder.
 
 3. Create and activate a virtual environment:
    ```
    python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   source venv/bin/activate
    ```
 
-4. Run the installation script:
+4. Install dependencies from requirements.txt:
+   ```
+   pip install -r requirements.txt
+   ```
+
+5. Run the installation script:
    ```
    python install.py
    ```
 
 This script will:
-- Install all required dependencies to your virtual environment
+- Install all required dependencies to your venv
 - Install ComfyUI and necessary custom nodes
 - Download and install all required models (FLUX, ControlNet, text encoders, PuLID, and more)
+
+## Configuration
+
+Create a .env file in the project root directory with your API keys:
+```
+touch .env
+echo "OPENAI_API_KEY=your_openai_api_key_here" >> .env
+echo "FAL_API_KEY=your_fal_api_key_here" >> .env
+```
+
+These API keys are required for certain features of the application to work properly.

@@ -1,0 +1,7 @@
+fastapi[standard]
+huggingface_hub[hf_transfer]
+comfy-cli
+python-dotenv
+requests
+openai
+fal-client
