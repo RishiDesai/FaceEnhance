@@ -6,7 +6,7 @@ import sys
 import cv2
 import base64
 import aiohttp
-from fal import Client as FalClient
+import fal_client
 sys.path.append('./ComfyUI_AutoCropFaces')
 from dotenv import load_dotenv
 load_dotenv()
