@@ -1,5 +1,5 @@
-# FaceEnhance
-Enhancing faces in AI generated images.
+# Face Enhance
+A tool for improving facial consistency and quality in AI-generated images. Dramatically enhance facial fidelity while preserving the original image's background, lighting, and composition.
 
 <div style="text-align: center;">
   <img src="examples/elon_compare.gif" alt="Elon Comparison" width="600"/>
@@ -55,7 +55,7 @@ touch .env
 echo "FAL_API_KEY=your_fal_api_key_here" >> .env
 ```
 
-These API keys are required for certain features of the application to work properly.
+The FAL API key is used for face upscaling during preprocessing. You can get one at [fal.ai](https://fal.ai/).
 
 # Gradio Demo
 
@@ -72,3 +72,9 @@ python gradio_demo.py
 - The script and demo run a ComfyUI server ephemerally
 - All images are saved in ./ComfyUI/input/scratch/
 - Temporary files are created during processing and cleaned up afterward
+
+### Troubleshooting
+
+- **Out of memory errors**: If your GPU has less than 48 GB VRAM, install [Flux.1-dev at float8 precision](https://huggingface.co/Comfy-Org/flux1-dev).
+- **Face detection issues**: This method works for photorealistic images of people. It may not work on cartoons, anime characters, or non-human subjects.
+- **Downloading models fails**: Check your Hugging Face token has proper permissions.
