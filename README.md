@@ -5,39 +5,39 @@ Enhancing faces in AI generated images.
 
 ### Prerequisites
 - Python 3.8 or higher
+- 1 GPU with 48GB VRAM
 - At least 50GB of free disk space
 
 ### Setup
 
 1. Set up your Hugging Face token:
-   - Create a token at [Hugging Face](https://huggingface.co/settings/tokens) if you don't have one
-   - Set the token as an environment variable:
+   - Create a token at [Hugging Face](https://huggingface.co/settings/tokens) set it as an environment variable.
+   - Set the token as an environment variable. HuggingFace requires login for downloading Flux:
      ```
      export HUGGINGFACE_TOKEN=your_token_here
      ```
+    - Set the Hugging Face cache directory:
+      ```
+      export HF_HOME=/path/to/your/huggingface_cache
+      ```
+      Models will be downloaded here and then symlinked to ./ComfyUI/models/.
 
-2. Set the Hugging Face cache directory:
-   ```
-   export HF_HOME=/path/to/your/huggingface_cache
-   ```
-   This is where models will be downloaded and then symlinked to ComfyUI.
-
-3. Create and activate a virtual environment with dependencies:
+2. Create virtual environment:
    ```
    python -m venv venv
    source venv/bin/activate
    python -m pip install -r requirements.txt
    ```
 
-4. Run the installation script:
+3. Run installation script:
    ```
    python install.py
    ```
 
 This script will:
 - Install all required dependencies to your venv
-- Install ComfyUI and necessary custom nodes
-- Download and install all required models (FLUX, ControlNet, text encoders, PuLID, and more)
+- Install ComfyUI and required custom nodes
+- Download and install all required models (Flux.1-dev, ControlNet, text encoders, PuLID, and more)
 
 ## Configuration
 
@@ -50,21 +50,19 @@ echo "FAL_API_KEY=your_fal_api_key_here" >> .env
 
 These API keys are required for certain features of the application to work properly.
 
-# Face Enhancement Gradio Demo
+# Gradio Demo
 
-A web interface for the face enhancement workflow using Gradio. Between 45-60 seconds processing time per image.
+A web interface for the face enhancement workflow. 
 
-## Setup
-
-1.
+1. Run
 
 ```bash
 python gradio_demo.py
 ```
 
-2. Port-forwarding 
+2. Run this on a separate terminal for port-forwarding 
 ```bash
-ssh -L 7860:localhost:7860 root@[IP_ADDRESS] -p [RUNPOD_PORT] -i ~/.ssh/[PRIVATE_KEY_NAME]
+ssh -L 7860:localhost:7860 root@[IP_ADDRESS] -p [SERVER_PORT] -i [PRIVATE_KEY]
 ```
 
 3. Go to http://localhost:7860
@@ -72,13 +70,13 @@ ssh -L 7860:localhost:7860 root@[IP_ADDRESS] -p [RUNPOD_PORT] -i ~/.ssh/[PRIVATE
 ## Usage
 
 1. Upload an input image you want to enhance
-2. Upload a reference face image
+2. Upload a high-quality reference face image
 3. Click "Enhance Face" to start the process
 4. Wait approximately 60 seconds for processing
 5. View the enhanced result in the output panel
 
 ## Notes
 
-- The demo runs a ComfyUI server ephemerally
-- Processing takes approximately 45-60 seconds per image
+- The script runs a ComfyUI server ephemerally
+- All images are saved in ./ComfyUI/input/scratch/
 - Temporary files are created during processing and cleaned up afterward
