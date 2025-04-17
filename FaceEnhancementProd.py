@@ -4,6 +4,8 @@ import sys
 from typing import Sequence, Mapping, Any, Union
 import torch
 
+BASE_PATH = "./"
+COMFYUI_PATH = os.path.join(BASE_PATH, "ComfyUI")
 
 def get_value_at_index(obj: Union[Sequence, Mapping], index: int) -> Any:
     """Returns the value at the given index of a sequence or mapping.
@@ -59,10 +61,7 @@ def add_comfyui_directory_to_sys_path() -> None:
     """
     Add 'ComfyUI' to the sys.path
     """
-    comfyui_path = find_path("ComfyUI")
-    if comfyui_path is not None and os.path.isdir(comfyui_path):
-        sys.path.append(comfyui_path)
-        print(f"'{comfyui_path}' added to sys.path")
+    return COMFYUI_PATH
 
 
 def add_extra_model_paths() -> None:
@@ -207,92 +206,86 @@ def main():
         image_comparer_rgthree = NODE_CLASS_MAPPINGS["Image Comparer (rgthree)"]()
         saveimage = SaveImage()
 
-        for q in range(10):
-            applypulidflux_133 = applypulidflux.apply_pulid_flux(
-                weight=0.7500000000000001,
-                start_at=0.10000000000000002,
-                end_at=1,
-                fusion="mean",
-                fusion_weight_max=1,
-                fusion_weight_min=0,
-                train_step=1000,
-                use_gray=True,
-                model=get_value_at_index(unetloader_93, 0),
-                pulid_flux=get_value_at_index(pulidfluxmodelloader_44, 0),
-                eva_clip=get_value_at_index(pulidfluxevacliploader_45, 0),
-                face_analysis=get_value_at_index(pulidfluxinsightfaceloader_46, 0),
-                image=get_value_at_index(loadimage_24, 0),
-                unique_id=1674270197144619516,
-            )
+        applypulidflux_133 = applypulidflux.apply_pulid_flux(
+            weight=0.7500000000000001,
+            start_at=0.10000000000000002,
+            end_at=1,
+            fusion="mean",
+            fusion_weight_max=1,
+            fusion_weight_min=0,
+            train_step=1000,
+            use_gray=True,
+            model=get_value_at_index(unetloader_93, 0),
+            pulid_flux=get_value_at_index(pulidfluxmodelloader_44, 0),
+            eva_clip=get_value_at_index(pulidfluxevacliploader_45, 0),
+            face_analysis=get_value_at_index(pulidfluxinsightfaceloader_46, 0),
+            image=get_value_at_index(loadimage_24, 0),
+            unique_id=1674270197144619516,
+        )
 
-            setunioncontrolnettype_41 = setunioncontrolnettype.set_controlnet_type(
-                type="tile", control_net=get_value_at_index(controlnetloader_49, 0)
-            )
+        setunioncontrolnettype_41 = setunioncontrolnettype.set_controlnet_type(
+            type="tile", control_net=get_value_at_index(controlnetloader_49, 0)
+        )
 
-            controlnetapplyadvanced_37 = controlnetapplyadvanced.apply_controlnet(
-                strength=1,
-                start_percent=0.1,
-                end_percent=0.8,
-                positive=get_value_at_index(cliptextencode_42, 0),
-                negative=get_value_at_index(cliptextencode_23, 0),
-                control_net=get_value_at_index(setunioncontrolnettype_41, 0),
-                image=get_value_at_index(loadimage_40, 0),
-                vae=get_value_at_index(vaeloader_95, 0),
-            )
+        controlnetapplyadvanced_37 = controlnetapplyadvanced.apply_controlnet(
+            strength=1,
+            start_percent=0.1,
+            end_percent=0.8,
+            positive=get_value_at_index(cliptextencode_42, 0),
+            negative=get_value_at_index(cliptextencode_23, 0),
+            control_net=get_value_at_index(setunioncontrolnettype_41, 0),
+            image=get_value_at_index(loadimage_40, 0),
+            vae=get_value_at_index(vaeloader_95, 0),
+        )
 
-            basicguider_122 = basicguider.get_guider(
-                model=get_value_at_index(applypulidflux_133, 0),
-                conditioning=get_value_at_index(controlnetapplyadvanced_37, 0),
-            )
+        basicguider_122 = basicguider.get_guider(
+            model=get_value_at_index(applypulidflux_133, 0),
+            conditioning=get_value_at_index(controlnetapplyadvanced_37, 0),
+        )
 
-            basicscheduler_131 = basicscheduler.get_sigmas(
-                scheduler="beta",
-                steps=28,
-                denoise=0.75,
-                model=get_value_at_index(applypulidflux_133, 0),
-            )
+        basicscheduler_131 = basicscheduler.get_sigmas(
+            scheduler="beta",
+            steps=28,
+            denoise=0.75,
+            model=get_value_at_index(applypulidflux_133, 0),
+        )
 
-            samplercustomadvanced_1 = samplercustomadvanced.sample(
-                noise=get_value_at_index(randomnoise_39, 0),
-                guider=get_value_at_index(basicguider_122, 0),
-                sampler=get_value_at_index(ksamplerselect_50, 0),
-                sigmas=get_value_at_index(basicscheduler_131, 0),
-                latent_image=get_value_at_index(vaeencode_35, 0),
-            )
+        samplercustomadvanced_1 = samplercustomadvanced.sample(
+            noise=get_value_at_index(randomnoise_39, 0),
+            guider=get_value_at_index(basicguider_122, 0),
+            sampler=get_value_at_index(ksamplerselect_50, 0),
+            sigmas=get_value_at_index(basicscheduler_131, 0),
+            latent_image=get_value_at_index(vaeencode_35, 0),
+        )
 
-            vaedecode_114 = vaedecode.decode(
-                samples=get_value_at_index(samplercustomadvanced_1, 0),
-                vae=get_value_at_index(vaeloader_95, 0),
-            )
+        vaedecode_114 = vaedecode.decode(
+            samples=get_value_at_index(samplercustomadvanced_1, 0),
+            vae=get_value_at_index(vaeloader_95, 0),
+        )
 
-            faceembeddistance_117 = faceembeddistance.analize(
-                similarity_metric="cosine",
-                filter_thresh=100,
-                filter_best=0,
-                generate_image_overlay=True,
-                analysis_models=get_value_at_index(faceanalysismodels_118, 0),
-                reference=get_value_at_index(loadimage_24, 0),
-                image=get_value_at_index(vaedecode_114, 0),
-            )
+        faceembeddistance_117 = faceembeddistance.analize(
+            similarity_metric="cosine",
+            filter_thresh=100,
+            filter_best=0,
+            generate_image_overlay=True,
+            analysis_models=get_value_at_index(faceanalysismodels_118, 0),
+            reference=get_value_at_index(loadimage_24, 0),
+            image=get_value_at_index(vaedecode_114, 0),
+        )
 
-            display_any_rgthree_121 = display_any_rgthree.main(
-                source=get_value_at_index(faceembeddistance_117, 1)
-            )
+        display_any_rgthree_121 = display_any_rgthree.main(
+            source=get_value_at_index(faceembeddistance_117, 1)
+        )
 
-            image_comparer_rgthree_123 = image_comparer_rgthree.compare_images(
-                image_a=get_value_at_index(loadimage_40, 0),
-                image_b=get_value_at_index(vaedecode_114, 0),
-            )
+        saveimage_128 = saveimage.save_images(
+            filename_prefix="FaceEnhanced",
+            images=get_value_at_index(vaedecode_114, 0),
+        )
 
-            saveimage_128 = saveimage.save_images(
-                filename_prefix="FaceEnhanced",
-                images=get_value_at_index(vaedecode_114, 0),
-            )
-
-            saveimage_129 = saveimage.save_images(
-                filename_prefix="FaceEmbedDist",
-                images=get_value_at_index(faceembeddistance_117, 0),
-            )
+        saveimage_129 = saveimage.save_images(
+            filename_prefix="FaceEmbedDist",
+            images=get_value_at_index(faceembeddistance_117, 0),
+        )
 
 
 if __name__ == "__main__":
