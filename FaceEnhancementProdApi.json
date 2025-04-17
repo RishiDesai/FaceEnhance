@@ -1,0 +1,403 @@
+{
+  "1": {
+    "inputs": {
+      "noise": [
+        "39",
+        0
+      ],
+      "guider": [
+        "122",
+        0
+      ],
+      "sampler": [
+        "50",
+        0
+      ],
+      "sigmas": [
+        "131",
+        0
+      ],
+      "latent_image": [
+        "35",
+        0
+      ]
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "_meta": {
+      "title": "SamplerCustomAdvanced"
+    }
+  },
+  "23": {
+    "inputs": {
+      "text": "",
+      "clip": [
+        "94",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "24": {
+    "inputs": {
+      "image": "woman_face.jpg"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "35": {
+    "inputs": {
+      "pixels": [
+        "40",
+        0
+      ],
+      "vae": [
+        "95",
+        0
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "37": {
+    "inputs": {
+      "strength": 1,
+      "start_percent": 0.1,
+      "end_percent": 0.8,
+      "positive": [
+        "42",
+        0
+      ],
+      "negative": [
+        "23",
+        0
+      ],
+      "control_net": [
+        "41",
+        0
+      ],
+      "image": [
+        "40",
+        0
+      ],
+      "vae": [
+        "95",
+        0
+      ]
+    },
+    "class_type": "ControlNetApplyAdvanced",
+    "_meta": {
+      "title": "Apply ControlNet"
+    }
+  },
+  "39": {
+    "inputs": {
+      "noise_seed": 1
+    },
+    "class_type": "RandomNoise",
+    "_meta": {
+      "title": "RandomNoise"
+    }
+  },
+  "40": {
+    "inputs": {
+      "image": "woman1_gpt_2.png"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "41": {
+    "inputs": {
+      "type": "tile",
+      "control_net": [
+        "49",
+        0
+      ]
+    },
+    "class_type": "SetUnionControlNetType",
+    "_meta": {
+      "title": "SetUnionControlNetType"
+    }
+  },
+  "42": {
+    "inputs": {
+      "text": "",
+      "clip": [
+        "94",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "44": {
+    "inputs": {
+      "pulid_file": "pulid_flux_v0.9.1.safetensors"
+    },
+    "class_type": "PulidFluxModelLoader",
+    "_meta": {
+      "title": "Load PuLID Flux Model"
+    }
+  },
+  "45": {
+    "inputs": {},
+    "class_type": "PulidFluxEvaClipLoader",
+    "_meta": {
+      "title": "Load Eva Clip (PuLID Flux)"
+    }
+  },
+  "46": {
+    "inputs": {
+      "provider": "CUDA"
+    },
+    "class_type": "PulidFluxInsightFaceLoader",
+    "_meta": {
+      "title": "Load InsightFace (PuLID Flux)"
+    }
+  },
+  "49": {
+    "inputs": {
+      "control_net_name": "Flux_Dev_ControlNet_Union_Pro_ShakkerLabs.safetensors"
+    },
+    "class_type": "ControlNetLoader",
+    "_meta": {
+      "title": "Load ControlNet Model"
+    }
+  },
+  "50": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "93": {
+    "inputs": {
+      "unet_name": "flux1-dev.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "Load Diffusion Model"
+    }
+  },
+  "94": {
+    "inputs": {
+      "clip_name1": "t5xxl_fp16.safetensors",
+      "clip_name2": "clip_l.safetensors",
+      "type": "flux",
+      "device": "default"
+    },
+    "class_type": "DualCLIPLoader",
+    "_meta": {
+      "title": "DualCLIPLoader"
+    }
+  },
+  "95": {
+    "inputs": {
+      "vae_name": "ae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "114": {
+    "inputs": {
+      "samples": [
+        "1",
+        0
+      ],
+      "vae": [
+        "95",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "117": {
+    "inputs": {
+      "similarity_metric": "cosine",
+      "filter_thresh": 100,
+      "filter_best": 0,
+      "generate_image_overlay": true,
+      "analysis_models": [
+        "118",
+        0
+      ],
+      "reference": [
+        "24",
+        0
+      ],
+      "image": [
+        "114",
+        0
+      ]
+    },
+    "class_type": "FaceEmbedDistance",
+    "_meta": {
+      "title": "Face Embeds Distance"
+    }
+  },
+  "118": {
+    "inputs": {
+      "library": "insightface",
+      "provider": "CUDA"
+    },
+    "class_type": "FaceAnalysisModels",
+    "_meta": {
+      "title": "Face Analysis Models"
+    }
+  },
+  "121": {
+    "inputs": {
+      "output": "",
+      "source": [
+        "117",
+        1
+      ]
+    },
+    "class_type": "Display Any (rgthree)",
+    "_meta": {
+      "title": "Display Any (rgthree)"
+    }
+  },
+  "122": {
+    "inputs": {
+      "model": [
+        "133",
+        0
+      ],
+      "conditioning": [
+        "37",
+        0
+      ]
+    },
+    "class_type": "BasicGuider",
+    "_meta": {
+      "title": "BasicGuider"
+    }
+  },
+  "123": {
+    "inputs": {
+      "rgthree_comparer": {
+        "images": [
+          {
+            "name": "A",
+            "selected": true,
+            "url": "/api/view?filename=rgthree.compare._temp_bikvi_00001_.png&type=temp&subfolder=&rand=0.3573763312590408"
+          },
+          {
+            "name": "B",
+            "selected": true,
+            "url": "/api/view?filename=rgthree.compare._temp_bikvi_00002_.png&type=temp&subfolder=&rand=0.1379430430729296"
+          }
+        ]
+      },
+      "image_a": [
+        "40",
+        0
+      ],
+      "image_b": [
+        "114",
+        0
+      ]
+    },
+    "class_type": "Image Comparer (rgthree)",
+    "_meta": {
+      "title": "Image Comparer (rgthree)"
+    }
+  },
+  "128": {
+    "inputs": {
+      "filename_prefix": "FaceEnhanced",
+      "images": [
+        "114",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "129": {
+    "inputs": {
+      "filename_prefix": "FaceEmbedDist",
+      "images": [
+        "117",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "131": {
+    "inputs": {
+      "scheduler": "beta",
+      "steps": 28,
+      "denoise": 0.75,
+      "model": [
+        "133",
+        0
+      ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "BasicScheduler"
+    }
+  },
+  "133": {
+    "inputs": {
+      "weight": 0.7500000000000001,
+      "start_at": 0.10000000000000002,
+      "end_at": 1,
+      "fusion": "mean",
+      "fusion_weight_max": 1,
+      "fusion_weight_min": 0,
+      "train_step": 1000,
+      "use_gray": true,
+      "model": [
+        "93",
+        0
+      ],
+      "pulid_flux": [
+        "44",
+        0
+      ],
+      "eva_clip": [
+        "45",
+        0
+      ],
+      "face_analysis": [
+        "46",
+        0
+      ],
+      "image": [
+        "24",
+        0
+      ]
+    },
+    "class_type": "ApplyPulidFlux",
+    "_meta": {
+      "title": "Apply PuLID Flux"
+    }
+  }
+}

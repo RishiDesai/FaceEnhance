@@ -35,5 +35,5 @@ Enhancing faces in AI generated images.
 
 This script will:
 - Install all required dependencies to your virtual environment
-- Set up ComfyUI and necessary components
-- Download and install all required models (FLUX, ControlNet, text encoders, and more)
+- Install ComfyUI and necessary custom nodes
+- Download and install all required models (FLUX, ControlNet, text encoders, PuLID, and more)
