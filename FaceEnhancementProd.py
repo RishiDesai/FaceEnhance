@@ -7,6 +7,9 @@ import torch
 BASE_PATH = "./"
 COMFYUI_PATH = os.path.join(BASE_PATH, "ComfyUI")
 
+# Declare models as a global variable at the top of the script
+models = None
+
 def get_value_at_index(obj: Union[Sequence, Mapping], index: int) -> Any:
     """Returns the value at the given index of a sequence or mapping.
 
@@ -125,23 +128,79 @@ from nodes import (
     ControlNetApplyAdvanced,
 )
 
+@torch.inference_mode()
+def load_models():
+    dualcliploader = DualCLIPLoader()
+    dualcliploader_94 = dualcliploader.load_clip(
+        clip_name1="t5xxl_fp16.safetensors",
+        clip_name2="clip_l.safetensors",
+        type="flux",
+        device="default",
+    )
+
+    vaeloader = VAELoader()
+    vaeloader_95 = vaeloader.load_vae(vae_name="ae.safetensors")
+
+    pulidfluxmodelloader = NODE_CLASS_MAPPINGS["PulidFluxModelLoader"]()
+    pulidfluxmodelloader_44 = pulidfluxmodelloader.load_model(
+        pulid_file="pulid_flux_v0.9.1.safetensors"
+    )
+
+    pulidfluxevacliploader = NODE_CLASS_MAPPINGS["PulidFluxEvaClipLoader"]()
+    pulidfluxevacliploader_45 = pulidfluxevacliploader.load_eva_clip()
+
+    pulidfluxinsightfaceloader = NODE_CLASS_MAPPINGS["PulidFluxInsightFaceLoader"]()
+    pulidfluxinsightfaceloader_46 = pulidfluxinsightfaceloader.load_insightface(
+        provider="CUDA"
+    )
+
+    controlnetloader = ControlNetLoader()
+    controlnetloader_49 = controlnetloader.load_controlnet(
+        control_net_name="Flux_Dev_ControlNet_Union_Pro_ShakkerLabs.safetensors"
+    )
+
+    unetloader = UNETLoader()
+    unetloader_93 = unetloader.load_unet(
+        unet_name="flux1-dev.safetensors", weight_dtype="default"
+    )
+
+    return {
+        "dualcliploader_94": dualcliploader_94,
+        "vaeloader_95": vaeloader_95,
+        "pulidfluxmodelloader_44": pulidfluxmodelloader_44,
+        "pulidfluxevacliploader_45": pulidfluxevacliploader_45,
+        "pulidfluxinsightfaceloader_46": pulidfluxinsightfaceloader_46,
+        "controlnetloader_49": controlnetloader_49,
+        "unetloader_93": unetloader_93
+    }
+
+def initialize_models():
+    global models
+    if models is None:
+        import_custom_nodes()  # Ensure NODE_CLASS_MAPPINGS is initialized
+        models = load_models()
+
+initialize_models()
 
 def main(
     face_image: str,
     input_image: str,
     output_image: str,
     dist_image: str = None,
-    positive_prompt: str = ""
+    positive_prompt: str = "",
+    # models: dict = None
 ):
-    import_custom_nodes()
+    global models
+    if models is None:
+        raise ValueError("Models must be initialized before calling main(). Call initialize_models() first.")
     with torch.inference_mode():
-        dualcliploader = DualCLIPLoader()
-        dualcliploader_94 = dualcliploader.load_clip(
-            clip_name1="t5xxl_fp16.safetensors",
-            clip_name2="clip_l.safetensors",
-            type="flux",
-            device="default",
-        )
+        dualcliploader_94 = models["dualcliploader_94"]
+        vaeloader_95 = models["vaeloader_95"]
+        pulidfluxmodelloader_44 = models["pulidfluxmodelloader_44"]
+        pulidfluxevacliploader_45 = models["pulidfluxevacliploader_45"]
+        pulidfluxinsightfaceloader_46 = models["pulidfluxinsightfaceloader_46"]
+        controlnetloader_49 = models["controlnetloader_49"]
+        unetloader_93 = models["unetloader_93"]
 
         cliptextencode = CLIPTextEncode()
         cliptextencode_23 = cliptextencode.encode(
@@ -152,9 +211,6 @@ def main(
         loadimage_24 = loadimage.load_image(image=face_image)
 
         loadimage_40 = loadimage.load_image(image=input_image)
-
-        vaeloader = VAELoader()
-        vaeloader_95 = vaeloader.load_vae(vae_name="ae.safetensors")
 
         vaeencode = VAEEncode()
         vaeencode_35 = vaeencode.encode(
@@ -169,36 +225,8 @@ def main(
             text=positive_prompt, clip=get_value_at_index(dualcliploader_94, 0)
         )
 
-        pulidfluxmodelloader = NODE_CLASS_MAPPINGS["PulidFluxModelLoader"]()
-        pulidfluxmodelloader_44 = pulidfluxmodelloader.load_model(
-            pulid_file="pulid_flux_v0.9.1.safetensors"
-        )
-
-        pulidfluxevacliploader = NODE_CLASS_MAPPINGS["PulidFluxEvaClipLoader"]()
-        pulidfluxevacliploader_45 = pulidfluxevacliploader.load_eva_clip()
-
-        pulidfluxinsightfaceloader = NODE_CLASS_MAPPINGS["PulidFluxInsightFaceLoader"]()
-        pulidfluxinsightfaceloader_46 = pulidfluxinsightfaceloader.load_insightface(
-            provider="CUDA"
-        )
-
-        controlnetloader = ControlNetLoader()
-        controlnetloader_49 = controlnetloader.load_controlnet(
-            control_net_name="Flux_Dev_ControlNet_Union_Pro_ShakkerLabs.safetensors"
-        )
-
         ksamplerselect = NODE_CLASS_MAPPINGS["KSamplerSelect"]()
         ksamplerselect_50 = ksamplerselect.get_sampler(sampler_name="euler")
-
-        unetloader = UNETLoader()
-        unetloader_93 = unetloader.load_unet(
-            unet_name="flux1-dev.safetensors", weight_dtype="default"
-        )
-
-        faceanalysismodels = NODE_CLASS_MAPPINGS["FaceAnalysisModels"]()
-        faceanalysismodels_118 = faceanalysismodels.load_models(
-            library="insightface", provider="CUDA"
-        )
 
         applypulidflux = NODE_CLASS_MAPPINGS["ApplyPulidFlux"]()
         setunioncontrolnettype = NODE_CLASS_MAPPINGS["SetUnionControlNetType"]()
@@ -269,24 +297,7 @@ def main(
             vae=get_value_at_index(vaeloader_95, 0),
         )
 
-        faceembeddistance_117 = faceembeddistance.analize(
-            similarity_metric="cosine",
-            filter_thresh=100,
-            filter_best=0,
-            generate_image_overlay=True,
-            analysis_models=get_value_at_index(faceanalysismodels_118, 0),
-            reference=get_value_at_index(loadimage_24, 0),
-            image=get_value_at_index(vaedecode_114, 0),
-        )
-
-        display_any_rgthree_121 = display_any_rgthree.main(
-            source=get_value_at_index(faceembeddistance_117, 1)
-        )
-
-        # Save using direct image saving
         save_comfy_images(get_value_at_index(vaedecode_114, 0), [output_image])
-        if dist_image:
-            save_comfy_images(get_value_at_index(faceembeddistance_117, 0), [dist_image])
 
 
 def save_comfy_images(images, output_dirs):
@@ -307,26 +318,8 @@ def save_comfy_images(images, output_dirs):
 
 
 def enhance_face(face_image: str, input_image: str, output_image: str, dist_image: str = None, positive_prompt: str = ""):
+    initialize_models()  # Ensure models are loaded
     main(face_image, input_image, output_image, dist_image, positive_prompt)
 
 if __name__ == "__main__":
-    import sys
-    
-    if len(sys.argv) < 4:
-        print("Usage: python FaceEnhancementProd.py face_image input_image output_image [dist_image] [positive_prompt]")
-        sys.exit(1)
-    
-    face_image = sys.argv[1]
-    input_image = sys.argv[2]
-    output_image = sys.argv[3]
-    
-    dist_image = None
-    positive_prompt = ""
-    
-    if len(sys.argv) > 4:
-        dist_image = sys.argv[4]
-    
-    if len(sys.argv) > 5:
-        positive_prompt = sys.argv[5]
-    
-    main(face_image, input_image, output_image, dist_image, positive_prompt)
+    pass
