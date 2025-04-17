@@ -5,6 +5,7 @@ from utils import crop_face, upscale_image
 def parse_args():
     parser = argparse.ArgumentParser(description='Face Enhancement Tool')
     parser.add_argument('--input', type=str, required=True, help='Path to the input image')
+    parser.add_argument('--ref', type=str, required=True, help='Path to the reference image')
     parser.add_argument('--crop', action='store_true', help='Whether to crop the image')
     parser.add_argument('--upscale', action='store_true', help='Whether to upscale the image')
     parser.add_argument('--output', type=str, required=True, help='Path to save the output image')
@@ -28,9 +29,9 @@ def main():
     print(f"Upscale enabled: {args.upscale}")
     print(f"Output will be saved to: {args.output}")
     
-    face_image = args.input
+    face_image = args.ref
     if args.crop:
-        crop_face(args.input, "./scratch/cropped_face.png")
+        crop_face(face_image, "./scratch/cropped_face.png")
         face_image = "./scratch/cropped_face.png"
 
     if args.upscale:
@@ -38,6 +39,5 @@ def main():
         face_image = "./scratch/upscaled_face.png"
     
 
-    
 if __name__ == "__main__":
     main() 
