@@ -53,3 +53,44 @@ echo "FAL_API_KEY=your_fal_api_key_here" >> .env
 ```
 
 These API keys are required for certain features of the application to work properly.
+
+# Face Enhancement Gradio Demo
+
+A web interface for the face enhancement workflow using Gradio.
+
+## Features
+
+- Simple web interface for face enhancement
+- Upload input image and reference face image
+- Queue system to process jobs sequentially on a single GPU
+- Approximately 60 seconds processing time per image
+
+## Setup
+
+1. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+2. Run the Gradio demo:
+
+```bash
+python gradio_demo.py
+```
+
+3. Open your browser and go to http://localhost:7860
+
+## Usage
+
+1. Upload an input image you want to enhance
+2. Upload a reference face image
+3. Click "Enhance Face" to start the process
+4. Wait approximately 60 seconds for processing
+5. View the enhanced result in the output panel
+
+## Notes
+
+- The demo uses a job queue to ensure only one job runs at a time
+- Processing takes approximately 60 seconds per image
+- Temporary files are created during processing and cleaned up afterward
