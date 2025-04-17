@@ -1,8 +1,9 @@
 import os
 
 # Define paths
-BASE_PATH = "./ComfyUI"
-MODEL_PATH = os.path.join(BASE_PATH, "models")
+BASE_PATH = "./"
+COMFYUI_PATH = os.path.join(BASE_PATH, "ComfyUI")
+MODEL_PATH = os.path.join(COMFYUI_PATH, "models")
 CACHE_PATH = "/workspace/huggingface_cache"
 
 os.environ["HF_HOME"] = CACHE_PATH
@@ -19,15 +20,15 @@ def run_command(command):
         exit(1)  # Exit on failure
 
 
-def install_dependencies():
-    """Install system dependencies and Python packages."""
-    print("📦 Installing dependencies...")
-    # run_command("apt-get update && apt-get install -y git wget curl libgl1-mesa-glx libglib2.0-0 tmux emacs git-lfs")
-    run_command("pip install --upgrade pip")
-    run_command("pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124")
-    run_command("pip install xformers --index-url https://download.pytorch.org/whl/cu124")
-    run_command("pip install -r requirements.txt")
-    print("✅ Dependencies installed.")
+# def install_dependencies():
+#     """Install system dependencies and Python packages."""
+#     print("📦 Installing dependencies...")
+#     # run_command("apt-get update && apt-get install -y git wget curl libgl1-mesa-glx libglib2.0-0 tmux emacs git-lfs")
+#     run_command("pip install --upgrade pip")
+#     run_command("pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124")
+#     run_command("pip install xformers --index-url https://download.pytorch.org/whl/cu124")
+#     # run_command("pip install -r requirements.txt")
+#     print("✅ Dependencies installed.")
 
 
 def manage_git_repo(repo_url, install_path, requirements=False, submodules=False):
@@ -39,6 +40,9 @@ def manage_git_repo(repo_url, install_path, requirements=False, submodules=False
         requirements: Whether to install requirements.txt
         submodules: Whether to update git submodules
     """
+    # Save the original directory
+    original_dir = os.getcwd()
+    
     if not os.path.exists(install_path) or not os.path.isdir(install_path) or not os.path.exists(
             os.path.join(install_path, ".git")):
         print(f"📂 Cloning {os.path.basename(install_path)}...")
@@ -57,16 +61,18 @@ def manage_git_repo(repo_url, install_path, requirements=False, submodules=False
         run_command("python -m pip install -r requirements.txt")
 
     print(f"✅ {os.path.basename(install_path)} installed and updated.")
+    
+    # Change back to the original directory
+    os.chdir(original_dir)
 
 
 def install_comfyui():
     """Clone and set up ComfyUI if not already installed."""
     manage_git_repo(
         "https://github.com/comfyanonymous/ComfyUI.git",
-        BASE_PATH,
+        COMFYUI_PATH,
         requirements=True
     )
-
 
 def download_huggingface_models():
     """Download required models from Hugging Face."""
@@ -145,133 +151,47 @@ def download_and_extract_antelopev2():
 
 def install_custom_nodes():
     """Install all custom nodes for ComfyUI."""
-    # List of custom nodes to install via comfy node install
-    custom_nodes = [
-        "comfyui_essentials",
-        "comfyui-detail-daemon",
-        "comfyui-advancedliveportrait",
-        "comfyui-impact-pack",
-        "comfyui-custom-scripts",
-        "rgthree-comfy",
-        "comfyui-easy-use",
-        "comfyui-florence2",
-        "comfyui-kjnodes",
-        "cg-use-everywhere",
-        "comfyui-impact-subpack",
-        "pulid_comfyui",
-        "comfyui_pulid_flux_ll",
-        "comfyui_birefnet_ll",
-        "comfyui_controlnet_aux"
-    ]
 
-    os.chdir(BASE_PATH)
-    # First update all existing nodes
-    run_command("comfy node update all")
-
-    # Then install any missing nodes
-    for node in custom_nodes:
-        run_command(f"comfy node install {node}")
-
-    print("✅ Installed and updated all ComfyUI registry nodes.")
-
-    # List of custom nodes to install from git
     custom_nodes_git = [
         {
-            "repo": "https://github.com/WASasquatch/was-node-suite-comfyui.git",
-            "name": "was-node-suite-comfyui",
+            "repo": "https://github.com/ltdrdata/ComfyUI-Manager",
+            "name": "ComfyUI-Manager",
             "requirements": True
         },
         {
-            "repo": "https://github.com/ssitu/ComfyUI_UltimateSDUpscale.git",
-            "name": "ComfyUI_UltimateSDUpscale",
-            "submodules": True
-        },
-        {
-            "repo": "https://github.com/huanngzh/ComfyUI-MVAdapter",
-            "name": "ComfyUI-MVAdapter",
+            "repo": "https://github.com/balazik/ComfyUI-PuLID-Flux",
+            "name": "ComfyUI-PuLID-Flux",
             "requirements": True
         },
         {
-            "repo": "https://github.com/sipie800/ComfyUI-PuLID-Flux-Enhanced.git",
-            "name": "ComfyUI-PuLID-Flux-Enhanced",
+            "repo": "https://github.com/rgthree/rgthree-comfy",
+            "name": "rgthree-comfy",
             "requirements": True
         },
-        {
-            "repo": "https://github.com/liusida/ComfyUI-AutoCropFaces.git",
-            "name": "ComfyUI-AutoCropFaces",
-            "submodules": True
-        },
-        {
-            "repo": "https://github.com/giriss/comfy-image-saver.git",
-            "name": "comfy-image-saver",
-            "requirements": True
-        },
-        {
-            "repo": "https://github.com/spacepxl/ComfyUI-Image-Filters.git",
-            "name": "ComfyUI-Image-Filters",
-            "requirements": True
-        },
-        {
-            "repo": "https://github.com/pydn/ComfyUI-to-Python-Extension.git",
-            "name": "ComfyUI-to-Python-Extension",
-            "requirements": True
-        },
-        {
-            "repo": "https://github.com/Limitex/ComfyUI-Diffusers.git",
-            "name": "ComfyUI-Diffusers",
-            "requirements": True,
-            "post_install": [
-                "git clone https://github.com/cumulo-autumn/StreamDiffusion.git",
-                "python -m streamdiffusion.tools.install-tensorrt"
-            ]
-        },
-        {
-            "repo": "https://github.com/Vaibhavs10/ComfyUI-DDUF.git",
-            "name": "ComfyUI-DDUF",
-            "requirements": True
-        },
-        {
-            "repo": "https://github.com/Chaoses-Ib/ComfyScript.git",
-            "name": "ComfyScript",
-            "post_install": [
-                "python -m pip install -e \".[default]\""
-            ]
+        { # we already have insightface so don't need requirements (for dlib)
+            "repo": "https://github.com/cubiq/ComfyUI_FaceAnalysis",
+            "name": "ComfyUI_FaceAnalysis",
+            "requirements": False
         }
     ]
 
-    # Install nodes from git
-    os.chdir(os.path.join(BASE_PATH, "custom_nodes"))
     for node in custom_nodes_git:
         repo_name = node["name"]
-        repo_path = os.path.join(BASE_PATH, "custom_nodes", repo_name)
+        repo_path = os.path.join(COMFYUI_PATH, "custom_nodes", repo_name)
         manage_git_repo(
             node["repo"],
             repo_path,
             requirements=node.get("requirements", False),
             submodules=node.get("submodules", False)
         )
+        print(f"✅ {repo_name} installed and updated.")
 
-        # Handle any post-install commands
-        if "post_install" in node:
-            os.chdir(repo_path)
-            for command in node["post_install"]:
-                run_command(command)
-
-
-def install_comfyui_manager():
-    """Install ComfyUI Manager."""
-    manager_path = os.path.join(BASE_PATH, "custom_nodes", "ComfyUI-Manager")
-    manage_git_repo(
-        "https://github.com/ltdrdata/ComfyUI-Manager",
-        manager_path,
-        requirements=True
-    )
+    print("✅ Installed and updated all ComfyUI nodes.")
 
 
 if __name__ == "__main__":
     # install_dependencies()
-    install_comfyui()
-    install_comfyui_manager()
+    # install_comfyui()
     # download_huggingface_models()
-    # install_custom_nodes()
+    install_custom_nodes()
     print("🎉 Setup Complete! Run `run.py` to start ComfyUI.")
