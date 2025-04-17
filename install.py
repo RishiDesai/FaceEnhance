@@ -207,8 +207,8 @@ def install_custom_nodes():
 
 
 if __name__ == "__main__":
-    # install_comfyui()
-    # install_custom_nodes()
-    # download_huggingface_models()
-    # download_and_extract_antelopev2()
+    install_comfyui()
+    install_custom_nodes()
+    download_huggingface_models()
+    download_and_extract_antelopev2()
     print("🎉 Setup Complete! Run `run.py` to start ComfyUI.")
