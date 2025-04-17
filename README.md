@@ -5,7 +5,7 @@ Enhancing faces in AI generated images.
 
 ### Prerequisites
 - Python 3.8 or higher
-- At least 50GB of free disk space for models and dependencies
+- At least 50GB of free disk space
 
 ### Setup
 
@@ -20,20 +20,16 @@ Enhancing faces in AI generated images.
    ```
    export HF_HOME=/path/to/your/huggingface_cache
    ```
-   This defines where models will be downloaded and then symlinked to the ComfyUI folder.
+   This is where models will be downloaded and then symlinked to ComfyUI.
 
-3. Create and activate a virtual environment:
+3. Create and activate a virtual environment with dependencies:
    ```
    python -m venv venv
    source venv/bin/activate
+   python -m pip install -r requirements.txt
    ```
 
-4. Install dependencies from requirements.txt:
-   ```
-   pip install -r requirements.txt
-   ```
-
-5. Run the installation script:
+4. Run the installation script:
    ```
    python install.py
    ```
@@ -56,30 +52,22 @@ These API keys are required for certain features of the application to work prop
 
 # Face Enhancement Gradio Demo
 
-A web interface for the face enhancement workflow using Gradio.
-
-## Features
-
-- Simple web interface for face enhancement
-- Upload input image and reference face image
-- Queue system to process jobs sequentially on a single GPU
-- Approximately 60 seconds processing time per image
+A web interface for the face enhancement workflow using Gradio. Between 45-60 seconds processing time per image.
 
 ## Setup
 
-1. Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-2. Run the Gradio demo:
+1.
 
 ```bash
 python gradio_demo.py
 ```
 
-3. Open your browser and go to http://localhost:7860
+2. Port-forwarding 
+```bash
+ssh -L 7860:localhost:7860 root@[IP_ADDRESS] -p [RUNPOD_PORT] -i ~/.ssh/[PRIVATE_KEY_NAME]
+```
+
+3. Go to http://localhost:7860
 
 ## Usage
 
@@ -91,6 +79,6 @@ python gradio_demo.py
 
 ## Notes
 
-- The demo uses a job queue to ensure only one job runs at a time
-- Processing takes approximately 60 seconds per image
+- The demo runs a ComfyUI server ephemerally
+- Processing takes approximately 45-60 seconds per image
 - Temporary files are created during processing and cleaned up afterward
