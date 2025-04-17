@@ -191,7 +191,12 @@ def install_custom_nodes():
             "repo": "https://github.com/cubiq/ComfyUI_FaceAnalysis",
             "name": "ComfyUI_FaceAnalysis",
             "requirements": False
-        }
+        },
+        # {
+        #     "repo": "https://github.com/pydn/ComfyUI-to-Python-Extension",
+        #     "name": "ComfyUI-to-Python-Extension",
+        #     "requirements": True
+        # },
     ]
 
     for node in custom_nodes_git:
