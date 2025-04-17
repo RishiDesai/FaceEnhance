@@ -1,7 +1,7 @@
 import gradio as gr
 import os
 import tempfile
-# from main import process_face
+from main import process_face
 from PIL import Image
 
 def enhance_face_gradio(input_image, ref_image):
@@ -30,13 +30,13 @@ def enhance_face_gradio(input_image, ref_image):
     
     try:
         # Process the face
-        # process_face(
-        #     input_path=input_path,
-        #     ref_path=ref_path,
-        #     crop=False,
-        #     upscale=False,
-        #     output_path=output_path
-        # )
+        process_face(
+            input_path=input_path,
+            ref_path=ref_path,
+            crop=False,
+            upscale=False,
+            output_path=output_path
+        )
         pass
     except Exception as e:
         # Handle the error, log it, and return an error message
@@ -93,11 +93,11 @@ def create_gradio_interface():
         gr.Examples(examples=example_inps, inputs=[input_image, ref_image], outputs=output_image)
 
     # Launch the Gradio app with queue
-    demo.queue(max_size=20)  # Configure queue size
+    demo.queue(max_size=20)
     demo.launch(
-        share=False,  # Set to True if you want a public link
+        share=True,  # Set to True if you want a public link
         server_name="0.0.0.0",  # Make available on all network interfaces
-        server_port=7860,  # Default Gradio port
+        server_port=7860,
     )
 
 
