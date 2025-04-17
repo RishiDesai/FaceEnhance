@@ -1,7 +1,7 @@
 import gradio as gr
 import os
 import tempfile
-from main import process_face
+# from main import process_face
 from PIL import Image
 
 def enhance_face_gradio(input_image, ref_image):
@@ -30,13 +30,14 @@ def enhance_face_gradio(input_image, ref_image):
     
     try:
         # Process the face
-        process_face(
-            input_path=input_path,
-            ref_path=ref_path,
-            crop=False,
-            upscale=False,
-            output_path=output_path
-        )
+        # process_face(
+        #     input_path=input_path,
+        #     ref_path=ref_path,
+        #     crop=False,
+        #     upscale=False,
+        #     output_path=output_path
+        # )
+        pass
     except Exception as e:
         # Handle the error, log it, and return an error message
         print(f"Error processing face: {e}")
@@ -52,12 +53,23 @@ def enhance_face_gradio(input_image, ref_image):
 def create_gradio_interface():
     # Create the Gradio interface
     with gr.Blocks(title="Face Enhancement Demo") as demo:
-        gr.Markdown("# Face Enhancement Demo")
-        gr.Markdown("Upload an input image and a reference face image to enhance the input.")
-        
+        # Add instructions at the top
+        gr.Markdown("""
+        # Face Enhancement Demo
+        ### Instructions
+        1. Upload an image you want to enhance
+        2. Upload a reference face image
+        3. Click 'Enhance Face' to start the process
+        4. Processing takes about 60 seconds
+        """, elem_id="instructions")
+
+        # Add a horizontal line for separation
+        gr.Markdown("---")
+
+        # Main interface layout
         with gr.Row():
             with gr.Column():
-                input_image = gr.Image(label="Input Image", type="pil")
+                input_image = gr.Image(label="Target Image", type="pil")
                 ref_image = gr.Image(label="Reference Face", type="pil")
                 enhance_button = gr.Button("Enhance Face")
             
@@ -70,14 +82,13 @@ def create_gradio_interface():
             outputs=output_image,
             queue=True  # Enable queue for sequential processing
         )
-        
-        gr.Markdown("""
-        ## Instructions
-        1. Upload an image you want to enhance
-        2. Upload a reference face image
-        3. Click 'Enhance Face' to start the process
-        4. Processing takes about 60 seconds
-        """)
+
+        # Add examples at the bottom in a table format
+        with gr.Row():
+            gr.Markdown("### Examples")
+            with gr.Column():
+                gr.Image("examples/chatgpt_dany_1.png", label="Target Image Example")
+                gr.Image("examples/dany_face.jpg", label="Reference Face Example")
 
     # Launch the Gradio app with queue
     demo.queue(max_size=20)  # Configure queue size
