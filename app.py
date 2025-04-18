@@ -1,3 +1,5 @@
+from install import install
+install()
 import gradio as gr
 import os
 import tempfile
@@ -8,7 +10,6 @@ import pathlib
 import sys
 from main import process_face
 from PIL import Image
-from install import install
 PORT = 7860
 CACHE_DIR = "./cache"
 
@@ -156,5 +157,4 @@ def create_gradio_interface():
 
 
 if __name__ == "__main__":
-    install()
     create_gradio_interface() 
