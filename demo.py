@@ -140,6 +140,8 @@ def create_gradio_interface():
         example_inps = [
             ["examples/dany_gpt_1.png", "examples/dany_face.jpg"],
             ["examples/dany_gpt_2.png", "examples/dany_face.jpg"],
+            ["examples/tim_gpt_1.png", "examples/tim_face.jpg"],
+            ["examples/tim_gpt_2.png", "examples/tim_face.jpg"],
         ]
         gr.Examples(examples=example_inps, inputs=[input_image, ref_image], outputs=output_image)
 
