@@ -83,7 +83,7 @@ def process_face(input_path, ref_path, crop=False, upscale=False, output_path=No
     comfy_ref_path = os.path.relpath(scratch_ref, "./ComfyUI/input")
     comfy_input_path = os.path.relpath(scratch_input, "./ComfyUI/input")
     
-    enhance_face(comfy_ref_path, comfy_input_path, output_path, dist_image=f"{output_path}_dist.png")
+    enhance_face(comfy_ref_path, comfy_input_path, output_path, dist_image=f"{output_path}_dist.png", id_weight=0.75)
     
     print(f"Enhanced image saved to: {output_path}")
     print(f"Working files are in: {scratch_dir}")
