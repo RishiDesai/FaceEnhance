@@ -4,3 +4,4 @@ venv
 .gradio/
 __pycache__/
 ComfyUI/
+cache/

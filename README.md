@@ -42,9 +42,9 @@ A tool for improving facial consistency and quality in AI-generated images. Dram
 
 4. Run inference on one example:
 
-```
-python main.py --input examples/dany_gpt_1.png --ref examples/dany_face.jpg --out examples/dany_enhanced.png
-```
+   ```
+   python main.py --input examples/dany_gpt_1.png --ref examples/dany_face.jpg --out examples/dany_enhanced.png
+   ```
 
 ## Running on ComfyUI
 
@@ -74,7 +74,7 @@ A simple web interface for the face enhancement workflow.
 ### Notes
 - The script and demo run a ComfyUI server ephemerally
 - Gradio demo is faster than the script because models remain loaded in memory
-- All images are saved in ./ComfyUI/input/scratch/
+- All images are saved in `./ComfyUI/input/scratch/`
 - Temporary files are created during processing and cleaned up afterward
 
 ### Troubleshooting

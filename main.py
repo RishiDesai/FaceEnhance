@@ -50,13 +50,6 @@ def create_scratch_dir():
 def process_face(input_path, ref_path, crop=False, upscale=False, output_path=None, id_weight=0.75):
     """
     Process a face image using the given parameters.
-    
-    Args:
-        input_path (str): Path to the input image
-        ref_path (str): Path to the reference image
-        crop (bool): Whether to crop the image
-        upscale (bool): Whether to upscale the image
-        output_path (str): Path to save the output image
         
     Returns:
         str: Path to the scratch directory used for processing
