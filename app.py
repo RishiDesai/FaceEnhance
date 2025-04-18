@@ -8,7 +8,7 @@ import pathlib
 import sys
 from main import process_face
 from PIL import Image
-
+from install import install
 PORT = 7860
 CACHE_DIR = "./cache"
 
@@ -140,6 +140,8 @@ def create_gradio_interface():
         example_inps = [
             ["examples/dany_gpt_1.png", "examples/dany_face.jpg"],
             ["examples/dany_gpt_2.png", "examples/dany_face.jpg"],
+            ["examples/tim_gpt_1.png", "examples/tim_face.jpg"],
+            ["examples/tim_gpt_2.png", "examples/tim_face.jpg"],
         ]
         gr.Examples(examples=example_inps, inputs=[input_image, ref_image], outputs=output_image)
 
@@ -147,17 +149,12 @@ def create_gradio_interface():
     demo.queue(max_size=99)
     
     try:
-        demo.launch(
-            share=True, 
-            server_name="0.0.0.0",
-            server_port=PORT,
-            quiet=True,
-            show_error=True,
-        )
+        demo.launch()
     except OSError as e:
         print(f"Error starting server: {e}")
         sys.exit(1)
 
 
 if __name__ == "__main__":
+    install()
     create_gradio_interface() 
