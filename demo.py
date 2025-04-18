@@ -113,13 +113,15 @@ def create_gradio_interface():
     with gr.Blocks(title="Face Enhancement Demo") as demo:
         # Add instructions at the top
         gr.Markdown("""
-        # Face Enhancement Demo
+        # Face Enhancement
         ### Instructions
         1. Upload the target image you want to enhance
         2. Upload a high-quality reference face image
-        3. Click 'Enhance Face' to start the processing
+        3. Click 'Enhance Face'
 
         Processing takes about 60 seconds. Due to the constraints of this demo, face cropping and upscaling are not applied to the reference image.
+
+        For more information, check out my [blog post](https://rishidesai.github.io/posts/face-enhancement-techniques/).
         """, elem_id="instructions")
 
         # Add a horizontal line for separation
