@@ -4,9 +4,8 @@ import os
 BASE_PATH = "./"
 COMFYUI_PATH = os.path.join(BASE_PATH, "ComfyUI")
 MODEL_PATH = os.path.join(COMFYUI_PATH, "models")
-CACHE_PATH = "/data/huggingface_cache"
 
-os.environ["HF_HOME"] = CACHE_PATH
+CACHE_PATH = os.getenv('HF_HOME')
 os.makedirs(CACHE_PATH, exist_ok=True)
 
 

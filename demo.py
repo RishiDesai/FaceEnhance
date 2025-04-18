@@ -2,8 +2,6 @@ from install import install
 
 # Global variable to track if install() has been run
 INSTALLED = False
-
-# Check if install() has been run before calling it
 if not INSTALLED:
     install()
     INSTALLED = True
@@ -18,7 +16,7 @@ import pathlib
 import sys
 from main import process_face
 from PIL import Image
-PORT = 7860
+
 CACHE_DIR = "./cache"
 
 # Ensure cache directory exists

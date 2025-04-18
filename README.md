@@ -64,21 +64,11 @@ Using the ComfyUI workflows is the fastest way to get started. Run `python run_c
 - `./workflows/FaceEmbedDist.json` for computing the face embedding distance
 
 
-<!-- ## Configuration
-
-Create a .env file in the project root directory with your API keys:
-```
-touch .env
-echo "FAL_API_KEY=your_fal_api_key_here" >> .env
-```
-
-The FAL API key is used for face upscaling during preprocessing. You can get one at [fal.ai](https://fal.ai/). -->
-
 ## Gradio Demo
 
 A simple web interface for the face enhancement workflow. 
 
-1. Run `python gradio_demo.py`
+1. Run `python demo.py`
 
 2. Go to http://localhost:7860. You may need to enable port forwarding.
 
@@ -87,6 +77,7 @@ A simple web interface for the face enhancement workflow.
 - Gradio demo is faster than the script because models remain loaded in memory
 - All images are saved in `./ComfyUI/input/scratch/`
 - Temporary files are created during processing and cleaned up afterward
+- Face cropping and upscaling are not applied to the reference image; this will be added in an update.
 
 ### Troubleshooting
 
