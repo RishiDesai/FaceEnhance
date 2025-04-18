@@ -4,6 +4,8 @@ import tempfile
 from main import process_face
 from PIL import Image
 
+PORT = 7860
+
 def enhance_face_gradio(input_image, ref_image):
     """
     Wrapper function for process_face that works with Gradio.
@@ -87,18 +89,25 @@ def create_gradio_interface():
         # Add examples using gr.Examples
         gr.Markdown("## Examples")
         example_inps = [
-            ["examples/chatgpt_dany_1.png", "examples/dany_face.jpg"],
-            ["examples/chatgpt_dany_2.png", "examples/dany_face.jpg"]
+            ["examples/dany_gpt_1.png", "examples/dany_face.jpg"],
+            ["examples/dany_gpt_2.png", "examples/dany_face.jpg"],
         ]
         gr.Examples(examples=example_inps, inputs=[input_image, ref_image], outputs=output_image)
 
     # Launch the Gradio app with queue
-    demo.queue(max_size=20)
-    demo.launch(
-        share=True,  # Set to True if you want a public link
-        server_name="0.0.0.0",  # Make available on all network interfaces
-        server_port=7860,
-    )
+    demo.queue(max_size=99)
+    
+    try:
+        demo.launch(
+            share=True, 
+            server_name="0.0.0.0",
+            server_port=PORT,
+            quiet=True,
+            show_error=True,
+        )
+    except OSError as e:
+        print(f"Error starting server: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

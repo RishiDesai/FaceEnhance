@@ -188,7 +188,7 @@ def main(
     output_image: str,
     dist_image: str = None,
     positive_prompt: str = "",
-    # models: dict = None
+    id_weight: float = 0.75,
 ):
     global models
     if models is None:
@@ -241,7 +241,7 @@ def main(
         saveimage = SaveImage()
 
         applypulidflux_133 = applypulidflux.apply_pulid_flux(
-            weight=0.7500000000000001,
+            weight=id_weight,
             start_at=0.10000000000000002,
             end_at=1,
             fusion="mean",
@@ -317,9 +317,9 @@ def save_comfy_images(images, output_dirs):
         pil_image.save(output_dirs[idx])
 
 
-def enhance_face(face_image: str, input_image: str, output_image: str, dist_image: str = None, positive_prompt: str = ""):
+def enhance_face(face_image: str, input_image: str, output_image: str, dist_image: str = None, positive_prompt: str = "", id_weight: float = 0.75):
     initialize_models()  # Ensure models are loaded
-    main(face_image, input_image, output_image, dist_image, positive_prompt)
+    main(face_image, input_image, output_image, dist_image, positive_prompt, id_weight)
 
 if __name__ == "__main__":
     pass
