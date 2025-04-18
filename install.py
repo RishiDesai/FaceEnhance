@@ -4,7 +4,7 @@ import os
 BASE_PATH = "./"
 COMFYUI_PATH = os.path.join(BASE_PATH, "ComfyUI")
 MODEL_PATH = os.path.join(COMFYUI_PATH, "models")
-CACHE_PATH = "/workspace/huggingface_cache"
+CACHE_PATH = "/work/huggingface_cache"
 
 os.environ["HF_HOME"] = CACHE_PATH
 os.makedirs(CACHE_PATH, exist_ok=True)
@@ -213,9 +213,12 @@ def install_custom_nodes():
     print("✅ Installed and updated all ComfyUI nodes.")
 
 
-if __name__ == "__main__":
+def install():
     install_comfyui()
     install_custom_nodes()
     download_huggingface_models()
     download_and_extract_antelopev2()
-    print("🎉 Setup Complete! Run `run.py` to start ComfyUI.")
+    print("🎉 Setup Complete! Run `run.py` to start ComfyUI.")  
+
+if __name__ == "__main__":
+    install()
