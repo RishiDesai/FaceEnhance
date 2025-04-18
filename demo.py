@@ -1,10 +1,33 @@
 import gradio as gr
 import os
 import tempfile
+import hashlib
+import io
+import pickle
+import pathlib
+import sys
 from main import process_face
 from PIL import Image
 
 PORT = 7860
+CACHE_DIR = "./cache"
+
+# Ensure cache directory exists
+os.makedirs(CACHE_DIR, exist_ok=True)
+
+def get_image_hash(img):
+    """
+    Generate a hash of the image content.
+    
+    Args:
+        img: PIL Image
+        
+    Returns:
+        str: Hash of the image
+    """
+    img_bytes = io.BytesIO()
+    img.save(img_bytes, format='PNG')
+    return hashlib.md5(img_bytes.getvalue()).hexdigest()
 
 def enhance_face_gradio(input_image, ref_image):
     """
@@ -17,6 +40,23 @@ def enhance_face_gradio(input_image, ref_image):
     Returns:
         PIL Image: Enhanced image
     """
+    # Generate hashes for both images
+    input_hash = get_image_hash(input_image)
+    ref_hash = get_image_hash(ref_image)
+    combined_hash = f"{input_hash}_{ref_hash}"
+    cache_path = os.path.join(CACHE_DIR, f"{combined_hash}.pkl")
+    
+    # Check if result exists in cache
+    if os.path.exists(cache_path):
+        try:
+            with open(cache_path, 'rb') as f:
+                result_img = pickle.load(f)
+                print(f"Returning cached result for images with hash {combined_hash}")
+                return result_img
+        except (pickle.PickleError, IOError) as e:
+            print(f"Error loading from cache: {e}")
+            # Continue to processing if cache load fails
+    
     # Create temporary files for input, reference, and output
     with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as input_file, \
          tempfile.NamedTemporaryFile(suffix=".png", delete=False) as ref_file, \
@@ -39,18 +79,27 @@ def enhance_face_gradio(input_image, ref_image):
             upscale=False,
             output_path=output_path
         )
-        pass
     except Exception as e:
         # Handle the error, log it, and return an error message
         print(f"Error processing face: {e}")
         return "An error occurred while processing the face. Please try again."
-
     finally:
         # Clean up temporary input and reference files
         os.unlink(input_path)
         os.unlink(ref_path)
     
-    return Image.open(output_path)
+    # Load the output image
+    result_img = Image.open(output_path)
+    
+    # Cache the result
+    try:
+        with open(cache_path, 'wb') as f:
+            pickle.dump(result_img, f)
+            print(f"Cached result for images with hash {combined_hash}")
+    except (pickle.PickleError, IOError) as e:
+        print(f"Error caching result: {e}")
+    
+    return result_img
 
 def create_gradio_interface():
     # Create the Gradio interface

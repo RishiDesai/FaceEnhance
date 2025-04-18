@@ -10,6 +10,7 @@ def parse_args():
     parser.add_argument('--crop', action='store_true', help='Whether to crop the image')
     parser.add_argument('--upscale', action='store_true', help='Whether to upscale the image')
     parser.add_argument('--output', type=str, required=True, help='Path to save the output image')
+    parser.add_argument('--id_weight', type=float, default=0.75, help='face ID weight')
     args = parser.parse_args()
     
     # Validate input file exists
@@ -46,7 +47,7 @@ def create_scratch_dir():
     
     return new_dir
 
-def process_face(input_path, ref_path, crop=False, upscale=False, output_path=None):
+def process_face(input_path, ref_path, crop=False, upscale=False, output_path=None, id_weight=0.75):
     """
     Process a face image using the given parameters.
     
@@ -83,7 +84,7 @@ def process_face(input_path, ref_path, crop=False, upscale=False, output_path=No
     comfy_ref_path = os.path.relpath(scratch_ref, "./ComfyUI/input")
     comfy_input_path = os.path.relpath(scratch_input, "./ComfyUI/input")
     
-    enhance_face(comfy_ref_path, comfy_input_path, output_path, dist_image=f"{output_path}_dist.png", id_weight=0.75)
+    enhance_face(comfy_ref_path, comfy_input_path, output_path, dist_image=f"{output_path}_dist.png", id_weight=id_weight)
     
     print(f"Enhanced image saved to: {output_path}")
     print(f"Working files are in: {scratch_dir}")
@@ -97,7 +98,8 @@ def main():
         ref_path=args.ref, 
         crop=args.crop, 
         upscale=args.upscale, 
-        output_path=args.output
+        output_path=args.output,
+        id_weight=args.id_weight
     )
 
 if __name__ == "__main__":
