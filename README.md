@@ -40,14 +40,20 @@ This will
 - Install ComfyUI, custom nodes, and required dependencies to your venv
 - Download all required models (Flux.1-dev, ControlNet, text encoders, PuLID, and more)
 
+4. Run inference on one example:
+
+```
+python main.py --input examples/dany_gpt_1.png --ref examples/dany_face.jpg --out examples/dany_enhanced.png
+```
+
 ## Running on ComfyUI
 
 Using the ComfyUI workflows is the fastest way to get started. Run `python run_comfy.py`
 - `./workflows/FaceEnhancementProd.json` for face enhancement
-- `./workflows/FaceEmbedDist.json` for computing the face embed distance
+- `./workflows/FaceEmbedDist.json` for computing the face embedding distance
 
 
-## Configuration
+<!-- ## Configuration
 
 Create a .env file in the project root directory with your API keys:
 ```
@@ -55,9 +61,9 @@ touch .env
 echo "FAL_API_KEY=your_fal_api_key_here" >> .env
 ```
 
-The FAL API key is used for face upscaling during preprocessing. You can get one at [fal.ai](https://fal.ai/).
+The FAL API key is used for face upscaling during preprocessing. You can get one at [fal.ai](https://fal.ai/). -->
 
-# Gradio Demo
+## Gradio Demo
 
 A simple web interface for the face enhancement workflow. 
 
@@ -70,6 +76,7 @@ python gradio_demo.py
 
 ### Notes
 - The script and demo run a ComfyUI server ephemerally
+- Gradio demo faster than the script since models remain loaded in memory
 - All images are saved in ./ComfyUI/input/scratch/
 - Temporary files are created during processing and cleaned up afterward
 

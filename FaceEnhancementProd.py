@@ -7,7 +7,9 @@ import torch
 BASE_PATH = "./"
 COMFYUI_PATH = os.path.join(BASE_PATH, "ComfyUI")
 
-# Declare models as a global variable at the top of the script
+"""
+To avoid loading the models each time, we store them in a global variable.
+"""
 models = None
 
 def get_value_at_index(obj: Union[Sequence, Mapping], index: int) -> Any:

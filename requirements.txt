@@ -3,7 +3,6 @@ huggingface_hub[hf_transfer]
 comfy-cli
 python-dotenv
 requests
-openai
 fal-client
 gradio>=3.50.2
 pillow>=10.0.0
