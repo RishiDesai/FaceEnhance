@@ -1,5 +1,13 @@
 from install import install
-install()
+
+# Global variable to track if install() has been run
+INSTALLED = False
+
+# Check if install() has been run before calling it
+if not INSTALLED:
+    install()
+    INSTALLED = True
+
 import gradio as gr
 import os
 import tempfile
@@ -111,7 +119,7 @@ def create_gradio_interface():
         ### Instructions
         1. Upload the target image you want to enhance
         2. Upload a high-quality reference face image
-        3. Click 'Enhance Face' to start the process
+        3. Click 'Enhance Face' to start the processing
 
         Processing takes about 60 seconds. Due to the constraints of this demo, face cropping and upscaling are not applied to the reference image.
         """, elem_id="instructions")
@@ -137,12 +145,13 @@ def create_gradio_interface():
         )
 
         # Add examples using gr.Examples
-        gr.Markdown("## Examples")
+        gr.Markdown("## Examples\nClick on an example to load the images into the interface.")
         example_inps = [
             ["examples/dany_gpt_1.png", "examples/dany_face.jpg"],
             ["examples/dany_gpt_2.png", "examples/dany_face.jpg"],
             ["examples/tim_gpt_1.png", "examples/tim_face.jpg"],
             ["examples/tim_gpt_2.png", "examples/tim_face.jpg"],
+            ["examples/elon_gpt.png", "examples/elon_face.png"],
         ]
         gr.Examples(examples=example_inps, inputs=[input_image, ref_image], outputs=output_image)
 
