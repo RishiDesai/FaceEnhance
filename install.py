@@ -78,6 +78,9 @@ def download_huggingface_models():
         {"repo_id": "comfyanonymous/flux_text_encoders", "filename": "clip_l.safetensors", "folder": "text_encoders"},
     ]
 
+    # Get the Hugging Face token from the environment variable
+    huggingface_token = os.getenv('HUGGINGFACE_TOKEN')
+
     # Dictionary mapping repo_ids to specific filenames
     filename_mappings = {
         "Shakker-Labs/FLUX.1-dev-ControlNet-Union-Pro": "Flux_Dev_ControlNet_Union_Pro_ShakkerLabs.safetensors",
@@ -89,7 +92,8 @@ def download_huggingface_models():
                 repo_id=model["repo_id"],
                 filename=model["filename"],
                 cache_dir=CACHE_PATH,
-                repo_type=model.get("repo_type", "model")
+                repo_type=model.get("repo_type", "model"),
+                token=huggingface_token
             )
             target_dir = os.path.join(MODEL_PATH, model["folder"])
             os.makedirs(target_dir, exist_ok=True)
