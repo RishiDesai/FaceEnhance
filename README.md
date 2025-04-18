@@ -16,13 +16,13 @@ A tool for improving facial consistency and quality in AI-generated images. Dram
 
 1. Set up your Hugging Face token:
    - Create a token at [Hugging Face](https://huggingface.co/settings/tokens)
+   - Log into Hugging Face and accept their terms of service to download Flux
    - Set the following environment variables:
      ```
      export HUGGINGFACE_TOKEN=your_token_here
      export HF_HOME=/path/to/your/huggingface_cache
      ```
-   - Models will be downloaded to `$HF_HOME` and then symlinked to `./ComfyUI/models/`
-   - Hugging Face requires login for downloading Flux
+   - Models will be downloaded to `$HF_HOME` and symlinked to `./ComfyUI/models/`
 
 2. Create the virtual environment:
    ```
@@ -36,9 +36,9 @@ A tool for improving facial consistency and quality in AI-generated images. Dram
    python install.py
    ```
 
-This will
-- Install ComfyUI, custom nodes, and required dependencies to your venv
-- Download all required models (Flux.1-dev, ControlNet, text encoders, PuLID, and more)
+   This will
+   - Install ComfyUI, custom nodes, and required dependencies to your venv
+   - Download all required models (Flux.1-dev, ControlNet, text encoders, PuLID, and more)
 
 4. Run inference on one example:
 
@@ -67,16 +67,13 @@ The FAL API key is used for face upscaling during preprocessing. You can get one
 
 A simple web interface for the face enhancement workflow. 
 
-1. Run
+1. Run `python gradio_demo.py`
 
-```bash
-python gradio_demo.py
-```
 2. Go to http://localhost:7860. You may need to enable port forwarding.
 
 ### Notes
 - The script and demo run a ComfyUI server ephemerally
-- Gradio demo faster than the script since models remain loaded in memory
+- Gradio demo is faster than the script because models remain loaded in memory
 - All images are saved in ./ComfyUI/input/scratch/
 - Temporary files are created during processing and cleaned up afterward
 
