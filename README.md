@@ -1,3 +1,14 @@
+---
+title: "My Face Enhancement Space"
+emoji: "😊"
+colorFrom: "blue"
+colorTo: "green"
+sdk: "gradio"
+sdk_version: "3.0.0"
+app_file: "app.py"
+pinned: false
+---
+
 # Face Enhance
 A tool for improving facial consistency and quality in AI-generated images. Dramatically enhance facial fidelity while preserving the original image's background, lighting, and composition.
 
