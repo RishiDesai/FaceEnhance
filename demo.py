@@ -71,8 +71,6 @@ def enhance_face_gradio(input_image, ref_image):
         process_face(
             input_path=input_path,
             ref_path=ref_path,
-            crop=False,
-            upscale=False,
             output_path=output_path
         )
     except Exception as e:
