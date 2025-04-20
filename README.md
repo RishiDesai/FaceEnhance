@@ -1,3 +1,14 @@
+---
+title: Face Enhancement
+emoji: 😎 
+colorFrom: red
+colorTo: green
+sdk: gradio
+sdk_version: 5.25.2
+app_file: demo.py
+pinned: false
+---
+
 # Face Enhance
 A tool for improving facial consistency and quality in AI-generated images. Dramatically enhance facial fidelity while preserving the original image's background, lighting, and composition.
 
@@ -92,14 +103,3 @@ Run `python run_comfy.py`. There are two workflows:
 - **Out of memory errors**: If your GPU has less than 48 GB VRAM, install [Flux.1-dev at fp8 precision](https://huggingface.co/Comfy-Org/flux1-dev).
 - **Face detection issues**: This method works for photorealistic images of people. It may not work on cartoons, anime characters, or non-human subjects.
 - **Downloading models fails**: Check your Hugging Face token has proper permissions.
-
----
-title: Face Enhancement
-emoji: 😎 
-colorFrom: red
-colorTo: green
-sdk: gradio
-sdk_version: 5.25.2
-app_file: demo.py
-pinned: false
---- 
