@@ -4,7 +4,7 @@ from pathlib import Path
 from PIL import Image
 import numpy as np
 
-def create_comparison_gif(before_img_path, after_img_path, output_path=None, duration=100, frames=20):
+def create_comparison_gif(before_img_path, after_img_path, output_path=None, duration=100, frames=20, crop_pixels=0, bottom_bias=0.50):
     """
     Create a comparison GIF with a vertical bar revealing the 'after' image.
     
@@ -14,6 +14,8 @@ def create_comparison_gif(before_img_path, after_img_path, output_path=None, dur
         output_path (str, optional): Path for the output GIF. Defaults to 'comparison.gif'
         duration (int, optional): Duration of each frame in ms. Defaults to 100.
         frames (int, optional): Number of frames in the GIF. Defaults to 20.
+        crop_pixels (int, optional): Number of pixels to crop from each side. Defaults to 0.
+        bottom_bias (float, optional): Percentage of additional cropping from the bottom. Defaults to 0.25 (25% more from the bottom).
     
     Returns:
         str: Path to the created GIF
@@ -21,7 +23,7 @@ def create_comparison_gif(before_img_path, after_img_path, output_path=None, dur
     # Default output path
     if output_path is None:
         output_path = 'comparison.gif'
-    
+     
     # Open images and ensure they have the same size
     before_img = Image.open(before_img_path)
     after_img = Image.open(after_img_path)
@@ -31,6 +33,16 @@ def create_comparison_gif(before_img_path, after_img_path, output_path=None, dur
         after_img = after_img.resize(before_img.size, Image.LANCZOS)
     
     width, height = before_img.size
+    
+    # Crop the images if crop_pixels is specified
+    if crop_pixels > 0:
+        left = crop_pixels
+        right = width - crop_pixels
+        top = int(crop_pixels * (1 - bottom_bias))
+        bottom = height - int(crop_pixels * (1 + bottom_bias))
+        before_img = before_img.crop((left, top, right, bottom))
+        after_img = after_img.crop((left, top, right, bottom))
+        width, height = before_img.size  # Update width and height after cropping
     
     # Create frames for the GIF
     gif_frames = []
@@ -77,6 +89,7 @@ def main():
     parser.add_argument('--output', '-o', help='Output path for the GIF', default='comparison.gif')
     parser.add_argument('--duration', '-d', type=int, help='Duration of each frame in ms', default=100)
     parser.add_argument('--frames', '-f', type=int, help='Number of frames to generate', default=20)
+    parser.add_argument('--crop', '-c', type=int, help='Number of pixels to crop from each side', default=0)
     
     args = parser.parse_args()
     
@@ -85,7 +98,8 @@ def main():
         args.after_image,
         args.output,
         args.duration,
-        args.frames
+        args.frames,
+        args.crop
     )
     
     print(f"Created comparison GIF: {output_path}")
