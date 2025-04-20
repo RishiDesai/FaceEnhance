@@ -7,8 +7,6 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Face Enhancement Tool')
     parser.add_argument('--input', type=str, required=True, help='Path to the input image')
     parser.add_argument('--ref', type=str, required=True, help='Path to the reference image')
-    parser.add_argument('--crop', action='store_true', help='Whether to crop the image')
-    parser.add_argument('--upscale', action='store_true', help='Whether to upscale the image')
     parser.add_argument('--output', type=str, required=True, help='Path to save the output image')
     parser.add_argument('--id_weight', type=float, default=0.75, help='face ID weight')
     args = parser.parse_args()
@@ -41,7 +39,7 @@ def create_scratch_dir():
 
     return new_dir
 
-def process_face(input_path, ref_path, crop=False, upscale=False, output_path=None, id_weight=0.75):
+def process_face(input_path, ref_path, output_path=None, id_weight=0.75):
     """
     Process a face image using the given parameters.
 
@@ -83,8 +81,6 @@ def main():
     return process_face(
         input_path=args.input,
         ref_path=args.ref,
-        crop=args.crop,
-        upscale=args.upscale,
         output_path=args.output,
         id_weight=args.id_weight
     )

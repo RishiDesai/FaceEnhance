@@ -21,7 +21,7 @@ A tool for improving facial consistency and quality in AI-generated images. Dram
 ### Prerequisites
 - Python 3.11 or higher
 - 1 GPU with 48GB VRAM
-- At least 50GB of free disk space
+- At least 60GB of free disk space
 
 ### Setup
 
@@ -33,7 +33,7 @@ A tool for improving facial consistency and quality in AI-generated images. Dram
      export HUGGINGFACE_TOKEN=your_token_here
      export HF_HOME=/path/to/your/huggingface_cache
      ```
-   - Models will be downloaded to `$HF_HOME` and symlinked to `./ComfyUI/models/`
+   - Models will be downloaded to `$HF_HOME` and symlinked to `FaceEnhance/ComfyUI/models/`
 
 2. Create the virtual environment:
    ```
@@ -73,9 +73,6 @@ A tool for improving facial consistency and quality in AI-generated images. Dram
    - `--input` (str): Path to the input image.
    - `--ref` (str): Path to the reference face image.
    - `--output` (str): Path to save the output image.
-   - `--crop` (store_true): Flag to face crop the reference image. Default: False.
-   - `--upscale` (store_true): Flag to upscale the (cropped) reference image. Default: False.
-   - `--caption` (store_true): Flag to caption the input image. Default: False.
    - `--id_weight` (float): Face ID weight. Default: 0.75.
    </details>
 
@@ -89,15 +86,15 @@ A simple web interface for the face enhancement workflow.
 
 ## Running on ComfyUI
 
-Using the ComfyUI workflows is the fastest way to get started. Run `python run_comfy.py`. There are two workflows:
-- `./workflows/FaceEnhancementProd.json` for face enhancement
-- `./workflows/FaceEmbedDist.json` for computing the [face embedding distance](https://github.com/cubiq/ComfyUI_FaceAnalysis)
+Run `python run_comfy.py`. There are two workflows:
+- `FaceEnhance/workflows/FaceEnhancementProd.json` for face enhancement
+- `FaceEnhance/workflows/FaceEmbedDist.json` for computing the [face embedding distance](https://github.com/cubiq/ComfyUI_FaceAnalysis)
 
 
 ### Notes
 - The script and demo run a ComfyUI server ephemerally
 - Gradio demo is faster than the script because the models remain loaded in memory and ComfyUI server is booted up.
-- All images are saved in `./ComfyUI/input/scratch/`
+- Images are saved in `FaceEnhance/ComfyUI/input/scratch/`
 - `FaceEnhancementProd.py` was created with the [ComfyUI-to-Python-Extension](https://github.com/pydn/ComfyUI-to-Python-Extension) and re-engineered for efficiency and function.
 - Face cropping, upscaling, and captioning are unavailable; these will be added in an update.
 

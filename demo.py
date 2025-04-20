@@ -98,17 +98,15 @@ def enhance_face_gradio(input_image, ref_image):
     return result_img
 
 def create_gradio_interface():
-    with gr.Blocks(title="Face Enhancement Demo") as demo:
+    with gr.Blocks(title="Face Enhancement") as demo:
         gr.Markdown("""
-        # Face Enhancement
+        # Face Enhance
         ### Instructions
         1. Upload the target image you want to enhance
-        2. Upload a high-quality reference face image
+        2. Upload a high-quality face image
         3. Click 'Enhance Face'
 
-        Processing takes about 60 seconds. Due to the constraints of this demo, face cropping and upscaling are not applied to the reference image.
-
-        For more information, check out my [blog post](https://rishidesai.github.io/posts/face-enhancement-techniques/).
+        Processing takes about 60 seconds.
         """, elem_id="instructions")
 
         gr.Markdown("---")
@@ -128,8 +126,10 @@ def create_gradio_interface():
             outputs=output_image,
             queue=True  # Enable queue for sequential processing
         )
-
-        gr.Markdown("## Examples\nClick on an example to load the images into the interface.")
+        gr.Markdown("""
+        ## Examples
+        Click on an example to load the images into the interface.
+        """)
         example_inps = [
             ["examples/dany_gpt_1.png", "examples/dany_face.jpg"],
             ["examples/dany_gpt_2.png", "examples/dany_face.jpg"],
@@ -138,6 +138,13 @@ def create_gradio_interface():
             ["examples/elon_gpt.png", "examples/elon_face.png"],
         ]
         gr.Examples(examples=example_inps, inputs=[input_image, ref_image], outputs=output_image)
+
+        gr.Markdown("""
+        ## Notes
+        Check out the code [here](https://github.com/RishiDesai/FaceEnhance) and see my [blog post](https://rishidesai.github.io/posts/face-enhancement-techniques/) for more information.
+        
+        Due to the constraints of this demo, face cropping and upscaling are not applied to the reference image.
+        """)
 
     # Launch the Gradio app with queue
     demo.queue(max_size=99)
