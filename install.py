@@ -2,8 +2,8 @@ import os
 
 COMFYUI_PATH = "./ComfyUI"
 
-CACHE_PATH = os.getenv('HF_HOME')
-os.makedirs(CACHE_PATH, exist_ok=True)
+HF_CACHE = os.getenv('HF_HOME')
+os.makedirs(HF_CACHE, exist_ok=True)
 
 
 def run_cmd(command):
@@ -13,6 +13,14 @@ def run_cmd(command):
     if exit_code != 0:
         print(f"❌ Command failed: {command} (Exit Code: {exit_code})")
         exit(1)
+
+
+def install_lfs_files():
+    """Install dependencies, pull git lfs files."""
+    run_cmd("apt-get update && apt-get install -y git-lfs")
+    run_cmd("git lfs install")
+    run_cmd("git lfs pull")
+    print("✅ Git LFS installed and files pulled.")
 
 
 def install_git_repo(repo_url, install_path, requirements=False, submodules=False):
@@ -72,7 +80,8 @@ def download_huggingface_models():
             model_path = hf_hub_download(
                 repo_id=model["repo_id"],
                 filename=model["filename"],
-                cache_dir=CACHE_PATH,
+                cache_dir=HF_CACHE
+            ,
                 repo_type=model.get("repo_type", "model"),
                 token=os.getenv('HUGGINGFACE_TOKEN')
             )
@@ -172,11 +181,6 @@ def install_custom_nodes():
             "name": "ComfyUI_FaceAnalysis",
             "requirements": False
         },
-        # {
-        #     "repo": "https://github.com/pydn/ComfyUI-to-Python-Extension",
-        #     "name": "ComfyUI-to-Python-Extension",
-        #     "requirements": True
-        # },
     ]
 
     for node in custom_nodes:
@@ -194,6 +198,7 @@ def install_custom_nodes():
 
 
 def install():
+    install_lfs_fil()
     install_comfyui()
     install_custom_nodes()
     download_huggingface_models()

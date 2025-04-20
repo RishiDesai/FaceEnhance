@@ -42,6 +42,16 @@ A tool for improving facial consistency and quality in AI-generated images. Dram
    python -m pip install -r requirements.txt
    ```
 
+   <details>
+   <summary>If you want a specific PyTorch+CUDA version</summary>
+
+   ```bash
+   python -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+   python -m pip install xformers --index-url https://download.pytorch.org/whl/cu124
+   ```
+
+   </details>
+
 3. Run the install script:
    ```
    python install.py
