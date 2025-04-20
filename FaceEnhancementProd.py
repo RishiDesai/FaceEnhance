@@ -4,13 +4,12 @@ import sys
 from typing import Sequence, Mapping, Any, Union
 import torch
 
-BASE_PATH = "./"
-COMFYUI_PATH = os.path.join(BASE_PATH, "ComfyUI")
+COMFYUI_PATH = "./ComfyUI"
 
 """
 To avoid loading the models each time, we store them in a global variable.
 """
-models = None
+COMFY_MODELS = None
 
 def get_value_at_index(obj: Union[Sequence, Mapping], index: int) -> Any:
     """Returns the value at the given index of a sequence or mapping.
@@ -74,7 +73,7 @@ def add_extra_model_paths() -> None:
     Parse the optional extra_model_paths.yaml file and add the parsed paths to the sys.path.
     """
     try:
-        from main import load_extra_path_config
+        from test import load_extra_path_config
     except ImportError:
         print(
             "Could not import load_extra_path_config from main.py. Looking in utils.extra_config instead."
@@ -177,10 +176,10 @@ def load_models():
     }
 
 def initialize_models():
-    global models
-    if models is None:
+    global COMFY_MODELS
+    if COMFY_MODELS is None:
         import_custom_nodes()  # Ensure NODE_CLASS_MAPPINGS is initialized
-        models = load_models()
+        COMFY_MODELS = load_models()
 
 initialize_models()
 
@@ -192,17 +191,17 @@ def main(
     positive_prompt: str = "",
     id_weight: float = 0.75,
 ):
-    global models
-    if models is None:
+    global COMFY_MODELS
+    if COMFY_MODELS is None:
         raise ValueError("Models must be initialized before calling main(). Call initialize_models() first.")
     with torch.inference_mode():
-        dualcliploader_94 = models["dualcliploader_94"]
-        vaeloader_95 = models["vaeloader_95"]
-        pulidfluxmodelloader_44 = models["pulidfluxmodelloader_44"]
-        pulidfluxevacliploader_45 = models["pulidfluxevacliploader_45"]
-        pulidfluxinsightfaceloader_46 = models["pulidfluxinsightfaceloader_46"]
-        controlnetloader_49 = models["controlnetloader_49"]
-        unetloader_93 = models["unetloader_93"]
+        dualcliploader_94 = COMFY_MODELS["dualcliploader_94"]
+        vaeloader_95 = COMFY_MODELS["vaeloader_95"]
+        pulidfluxmodelloader_44 = COMFY_MODELS["pulidfluxmodelloader_44"]
+        pulidfluxevacliploader_45 = COMFY_MODELS["pulidfluxevacliploader_45"]
+        pulidfluxinsightfaceloader_46 = COMFY_MODELS["pulidfluxinsightfaceloader_46"]
+        controlnetloader_49 = COMFY_MODELS["controlnetloader_49"]
+        unetloader_93 = COMFY_MODELS["unetloader_93"]
 
         cliptextencode = CLIPTextEncode()
         cliptextencode_23 = cliptextencode.encode(
@@ -237,10 +236,10 @@ def main(
         basicscheduler = NODE_CLASS_MAPPINGS["BasicScheduler"]()
         samplercustomadvanced = NODE_CLASS_MAPPINGS["SamplerCustomAdvanced"]()
         vaedecode = VAEDecode()
-        faceembeddistance = NODE_CLASS_MAPPINGS["FaceEmbedDistance"]()
-        display_any_rgthree = NODE_CLASS_MAPPINGS["Display Any (rgthree)"]()
-        image_comparer_rgthree = NODE_CLASS_MAPPINGS["Image Comparer (rgthree)"]()
-        saveimage = SaveImage()
+        # faceembeddistance = NODE_CLASS_MAPPINGS["FaceEmbedDistance"]()
+        # display_any_rgthree = NODE_CLASS_MAPPINGS["Display Any (rgthree)"]()
+        # image_comparer_rgthree = NODE_CLASS_MAPPINGS["Image Comparer (rgthree)"]()
+        # saveimage = SaveImage()
 
         applypulidflux_133 = applypulidflux.apply_pulid_flux(
             weight=id_weight,

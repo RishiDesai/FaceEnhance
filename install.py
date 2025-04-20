@@ -1,62 +1,47 @@
 import os
 
-# Define paths
-BASE_PATH = "./"
-COMFYUI_PATH = os.path.join(BASE_PATH, "ComfyUI")
-MODEL_PATH = os.path.join(COMFYUI_PATH, "models")
+COMFYUI_PATH = "./ComfyUI"
 
 CACHE_PATH = os.getenv('HF_HOME')
 os.makedirs(CACHE_PATH, exist_ok=True)
 
 
-def run_command(command):
-    """Run a shell command using os.system() (simpler than subprocess)."""
+def run_cmd(command):
+    """Run a shell command"""
     print(f"🔄 Running: {command}")
     exit_code = os.system(command)
-
     if exit_code != 0:
         print(f"❌ Command failed: {command} (Exit Code: {exit_code})")
-        exit(1)  # Exit on failure
+        exit(1)
 
 
-def manage_git_repo(repo_url, install_path, requirements=False, submodules=False):
-    """Clone or update a git repository and handle its dependencies.
-
-    Args:
-        repo_url: URL of the git repository
-        install_path: Where to install/update the repository
-        requirements: Whether to install requirements.txt
-        submodules: Whether to update git submodules
-    """
-    # Save the original directory
+def install_git_repo(repo_url, install_path, requirements=False, submodules=False):
+    """Clone or update a git repository and handle its dependencies"""
     original_dir = os.getcwd()
 
     if not os.path.exists(install_path) or not os.path.isdir(install_path) or not os.path.exists(
             os.path.join(install_path, ".git")):
         print(f"📂 Cloning {os.path.basename(install_path)}...")
-        run_command(f"git clone {repo_url} {install_path}")
+        run_cmd(f"git clone {repo_url} {install_path}")
     else:
         print(f"🔄 {os.path.basename(install_path)} exists. Checking for updates...")
 
     # Change to repo directory and update
     os.chdir(install_path)
-    run_command("git pull")
+    run_cmd("git pull")
 
     if submodules:
-        run_command("git submodule update --init --recursive")
-
+        run_cmd("git submodule update --init --recursive")
     if requirements:
-        run_command("python -m pip install -r requirements.txt")
+        run_cmd("python -m pip install -r requirements.txt")
 
     print(f"✅ {os.path.basename(install_path)} installed and updated.")
-
-    # Change back to the original directory
     os.chdir(original_dir)
 
 
 def install_comfyui():
     """Clone and set up ComfyUI if not already installed."""
-    manage_git_repo(
+    install_git_repo(
         "https://github.com/comfyanonymous/ComfyUI.git",
         COMFYUI_PATH,
         requirements=True
@@ -77,10 +62,7 @@ def download_huggingface_models():
         {"repo_id": "comfyanonymous/flux_text_encoders", "filename": "clip_l.safetensors", "folder": "text_encoders"},
     ]
 
-    # Get the Hugging Face token from the environment variable
-    huggingface_token = os.getenv('HUGGINGFACE_TOKEN')
-
-    # Dictionary mapping repo_ids to specific filenames
+    # More specific filenames
     filename_mappings = {
         "Shakker-Labs/FLUX.1-dev-ControlNet-Union-Pro": "Flux_Dev_ControlNet_Union_Pro_ShakkerLabs.safetensors",
     }
@@ -92,9 +74,9 @@ def download_huggingface_models():
                 filename=model["filename"],
                 cache_dir=CACHE_PATH,
                 repo_type=model.get("repo_type", "model"),
-                token=huggingface_token
+                token=os.getenv('HUGGINGFACE_TOKEN')
             )
-            target_dir = os.path.join(MODEL_PATH, model["folder"])
+            target_dir = os.path.join(COMFYUI_PATH, "models", model["folder"])
             os.makedirs(target_dir, exist_ok=True)
 
             # Use mapping if it exists, otherwise use original filename
@@ -114,7 +96,7 @@ def download_and_extract_antelopev2():
     """Download and extract AntelopeV2 model for insightface."""
     import zipfile, requests, shutil
 
-    base_path = os.path.join(MODEL_PATH, "insightface/models")
+    base_path = os.path.join(COMFYUI_PATH, "models", "insightface/models")
     model_target_path = os.path.join(base_path, "antelopev2")
     download_url = "https://huggingface.co/MonsterMMORPG/tools/resolve/main/antelopev2.zip"
     zip_path = os.path.join(base_path, "antelopev2.zip")
@@ -174,12 +156,7 @@ def download_and_extract_antelopev2():
 def install_custom_nodes():
     """Install all custom nodes for ComfyUI."""
 
-    custom_nodes_git = [
-        {
-            "repo": "https://github.com/ltdrdata/ComfyUI-Manager",
-            "name": "ComfyUI-Manager",
-            "requirements": True
-        },
+    custom_nodes = [
         {
             "repo": "https://github.com/sipie800/ComfyUI-PuLID-Flux-Enhanced",
             "name": "ComfyUI-PuLID-Flux-Enhanced",
@@ -190,7 +167,7 @@ def install_custom_nodes():
             "name": "rgthree-comfy",
             "requirements": True
         },
-        {  # we already have insightface so don't need requirements (for dlib)
+        {  # we already have insightface so don't need requirements (no dlib)
             "repo": "https://github.com/cubiq/ComfyUI_FaceAnalysis",
             "name": "ComfyUI_FaceAnalysis",
             "requirements": False
@@ -202,10 +179,10 @@ def install_custom_nodes():
         # },
     ]
 
-    for node in custom_nodes_git:
+    for node in custom_nodes:
         repo_name = node["name"]
         repo_path = os.path.join(COMFYUI_PATH, "custom_nodes", repo_name)
-        manage_git_repo(
+        install_git_repo(
             node["repo"],
             repo_path,
             requirements=node.get("requirements", False),
@@ -221,7 +198,7 @@ def install():
     install_custom_nodes()
     download_huggingface_models()
     download_and_extract_antelopev2()
-    print("🎉 Setup Complete! Run `run.py` to start ComfyUI.")  
+    print("🎉 Setup Complete!")
 
 if __name__ == "__main__":
     install()

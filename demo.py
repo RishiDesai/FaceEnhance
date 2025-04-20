@@ -1,37 +1,27 @@
+import os
 from install import install
 
-# Global variable to track if install() has been run
-INSTALLED = False
-if not INSTALLED:
-    install()
-    INSTALLED = True
+if "HF_DEMO" in os.environ:
+    # Global variable to track if install() has been run; only for deploying on HF space
+    INSTALLED = False
+    if not INSTALLED:
+        install()
+        INSTALLED = True
 
 import gradio as gr
-import os
 import tempfile
 import hashlib
 import io
 import pickle
-import pathlib
 import sys
-from main import process_face
+from test import process_face
 from PIL import Image
 
-CACHE_DIR = "./cache"
-
-# Ensure cache directory exists
-os.makedirs(CACHE_DIR, exist_ok=True)
+INPUT_CACHE_DIR = "./cache"
+os.makedirs(INPUT_CACHE_DIR, exist_ok=True)
 
 def get_image_hash(img):
-    """
-    Generate a hash of the image content.
-    
-    Args:
-        img: PIL Image
-        
-    Returns:
-        str: Hash of the image
-    """
+    """Generate a hash of the image content."""
     img_bytes = io.BytesIO()
     img.save(img_bytes, format='PNG')
     return hashlib.md5(img_bytes.getvalue()).hexdigest()
@@ -51,7 +41,7 @@ def enhance_face_gradio(input_image, ref_image):
     input_hash = get_image_hash(input_image)
     ref_hash = get_image_hash(ref_image)
     combined_hash = f"{input_hash}_{ref_hash}"
-    cache_path = os.path.join(CACHE_DIR, f"{combined_hash}.pkl")
+    cache_path = os.path.join(INPUT_CACHE_DIR, f"{combined_hash}.pkl")
     
     # Check if result exists in cache
     if os.path.exists(cache_path):
@@ -78,7 +68,6 @@ def enhance_face_gradio(input_image, ref_image):
     ref_image.save(ref_path)
     
     try:
-        # Process the face
         process_face(
             input_path=input_path,
             ref_path=ref_path,
@@ -109,9 +98,7 @@ def enhance_face_gradio(input_image, ref_image):
     return result_img
 
 def create_gradio_interface():
-    # Create the Gradio interface
     with gr.Blocks(title="Face Enhancement Demo") as demo:
-        # Add instructions at the top
         gr.Markdown("""
         # Face Enhancement
         ### Instructions
@@ -124,10 +111,8 @@ def create_gradio_interface():
         For more information, check out my [blog post](https://rishidesai.github.io/posts/face-enhancement-techniques/).
         """, elem_id="instructions")
 
-        # Add a horizontal line for separation
         gr.Markdown("---")
 
-        # Main interface layout
         with gr.Row():
             with gr.Column():
                 input_image = gr.Image(label="Target Image", type="pil")
@@ -144,7 +129,6 @@ def create_gradio_interface():
             queue=True  # Enable queue for sequential processing
         )
 
-        # Add examples using gr.Examples
         gr.Markdown("## Examples\nClick on an example to load the images into the interface.")
         example_inps = [
             ["examples/dany_gpt_1.png", "examples/dany_face.jpg"],

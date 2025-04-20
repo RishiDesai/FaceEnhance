@@ -1,18 +1,19 @@
 import os
 import subprocess
+import argparse
 
 COMFYUI_PATH = "./ComfyUI"
-PORT = 8000
 
-
-def run_comfyui():
+def run_comfyui(port):
     """Launch ComfyUI with external access."""
     os.chdir(COMFYUI_PATH)
-    print(f"🚀 Launching ComfyUI on port {PORT}...")
+    print(f"🚀 Launching ComfyUI on port {port}...")
 
-    subprocess.run(f"python main.py --listen 0.0.0.0 --port {PORT} --disable-auto-launch", shell=True)
-
+    subprocess.run(f"python main.py --listen 0.0.0.0 --port {port} --disable-auto-launch", shell=True)
 
 if __name__ == "__main__":
-    run_comfyui()
-    print(f"Enable port-forwarding\nssh -L {PORT}:localhost:{PORT} [NAME]@[IP_ADDRESS] -p [SERVER_PORT] -i [PRIVATE_KEY]")
+    parser = argparse.ArgumentParser(description="Run ComfyUI")
+    parser.add_argument('--port', type=int, default=8000, help='Port to run ComfyUI on')
+    args = parser.parse_args()
+
+    run_comfyui(args.port)

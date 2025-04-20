@@ -27,7 +27,7 @@ A tool for improving facial consistency and quality in AI-generated images. Dram
 
 1. Set up your Hugging Face token:
    - Create a token at [Hugging Face](https://huggingface.co/settings/tokens)
-   - Log into Hugging Face and accept their terms of service to download Flux
+   - Log into Hugging Face and accept their terms of service to download [Flux.1-dev](https://huggingface.co/black-forest-labs/FLUX.1-dev)
    - Set the following environment variables:
      ```
      export HUGGINGFACE_TOKEN=your_token_here
@@ -48,21 +48,26 @@ A tool for improving facial consistency and quality in AI-generated images. Dram
    ```
 
    This will
-   - Install ComfyUI, custom nodes, and required dependencies to your venv
+   - Install ComfyUI, custom nodes, and remaining dependencies to your venv
    - Download all required models (Flux.1-dev, ControlNet, text encoders, PuLID, and more)
 
 4. Run inference on one example:
 
    ```
-   python main.py --input examples/dany_gpt_1.png --ref examples/dany_face.jpg --out examples/dany_enhanced.png
+   python test.py --input examples/dany_gpt_1.png --ref examples/dany_face.jpg --out examples/dany_enhanced.png
    ```
 
-## Running on ComfyUI
+   <details>
+   <summary>Arguments</summary>
 
-Using the ComfyUI workflows is the fastest way to get started. Run `python run_comfy.py`
-- `./workflows/FaceEnhancementProd.json` for face enhancement
-- `./workflows/FaceEmbedDist.json` for computing the face embedding distance
-
+   - `--input` (str): Path to the input image.
+   - `--ref` (str): Path to the reference face image.
+   - `--output` (str): Path to save the output image.
+   - `--crop` (store_true): Flag to face crop the reference image. Default: False.
+   - `--upscale` (store_true): Flag to upscale the (cropped) reference image. Default: False.
+   - `--caption` (store_true): Flag to caption the input image. Default: False.
+   - `--id_weight` (float): Face ID weight. Default: 0.75.
+   </details>
 
 ## Gradio Demo
 
@@ -72,15 +77,22 @@ A simple web interface for the face enhancement workflow.
 
 2. Go to http://localhost:7860. You may need to enable port forwarding.
 
+## Running on ComfyUI
+
+Using the ComfyUI workflows is the fastest way to get started. Run `python run_comfy.py`. There are two workflows:
+- `./workflows/FaceEnhancementProd.json` for face enhancement
+- `./workflows/FaceEmbedDist.json` for computing the [face embedding distance](https://github.com/cubiq/ComfyUI_FaceAnalysis)
+
+
 ### Notes
 - The script and demo run a ComfyUI server ephemerally
-- Gradio demo is faster than the script because models remain loaded in memory
+- Gradio demo is faster than the script because the models remain loaded in memory and ComfyUI server is booted up.
 - All images are saved in `./ComfyUI/input/scratch/`
-- Temporary files are created during processing and cleaned up afterward
-- Face cropping and upscaling are not applied to the reference image; this will be added in an update.
+- `FaceEnhancementProd.py` was created with the [ComfyUI-to-Python-Extension](https://github.com/pydn/ComfyUI-to-Python-Extension) and re-engineered for efficiency and function.
+- Face cropping, upscaling, and captioning are unavailable; these will be added in an update.
 
 ### Troubleshooting
 
-- **Out of memory errors**: If your GPU has less than 48 GB VRAM, install [Flux.1-dev at float8 precision](https://huggingface.co/Comfy-Org/flux1-dev).
+- **Out of memory errors**: If your GPU has less than 48 GB VRAM, install [Flux.1-dev at fp8 precision](https://huggingface.co/Comfy-Org/flux1-dev).
 - **Face detection issues**: This method works for photorealistic images of people. It may not work on cartoons, anime characters, or non-human subjects.
 - **Downloading models fails**: Check your Hugging Face token has proper permissions.
