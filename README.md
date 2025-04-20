@@ -1,3 +1,4 @@
+<!--  Needed for HF space
 ---
 title: My Face Enhancement Space
 emoji: 😊
@@ -7,7 +8,8 @@ sdk: gradio
 sdk_version: 5.25.2
 app_file: demo.py
 pinned: false
----
+--- 
+-->
 
 # Face Enhance
 A tool for improving facial consistency and quality in AI-generated images. Dramatically enhance facial fidelity while preserving the original image's background, lighting, and composition.
@@ -84,7 +86,7 @@ A simple web interface for the face enhancement workflow.
 
 2. Go to http://localhost:7860. You may need to enable port forwarding.
 
-## Running on ComfyUI
+## ComfyUI
 
 Run `python run_comfy.py`. There are two workflows:
 - `FaceEnhance/workflows/FaceEnhancementProd.json` for face enhancement
