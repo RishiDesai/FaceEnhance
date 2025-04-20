@@ -198,7 +198,7 @@ def install_custom_nodes():
 
 
 def install():
-    install_lfs_fil()
+    install_lfs_files()
     install_comfyui()
     install_custom_nodes()
     download_huggingface_models()
