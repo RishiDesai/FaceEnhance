@@ -18,7 +18,12 @@ def run_cmd(command):
 def install_lfs_files():
     """Install dependencies, pull git lfs files."""
     run_cmd("apt-get update && apt-get install -y git-lfs")
-    run_cmd("git lfs install")
+    hook_path = os.path.join(".git", "hooks", "pre-push")
+    if os.path.exists(hook_path):
+        print("⚠️ Git LFS hook already exists. Skipping installation.")
+    else:
+        run_cmd("git lfs install")
+    
     run_cmd("git lfs pull")
     print("✅ Git LFS installed and files pulled.")
 
