@@ -25,14 +25,8 @@ A tool for improving facial consistency and quality in AI-generated images. Dram
 
 ### Setup
 
-1. Set up your Hugging Face account:
-   <details>
-   <summary>Instructions</summary>
+1. Log into Hugging Face and accept their terms of service to download [Flux.1-dev](https://huggingface.co/black-forest-labs/FLUX.1-dev)
 
-   - Log into Hugging Face and accept their terms of service to download [Flux.1-dev](https://huggingface.co/black-forest-labs/FLUX.1-dev)
-   - Models will be downloaded to `HF_HOME` and symlinked to `FaceEnhance/ComfyUI/models/`
-
-   </details>
 
 2. Create the virtual environment:
    ```bash
@@ -58,7 +52,7 @@ A tool for improving facial consistency and quality in AI-generated images. Dram
 
    This will
    - Install ComfyUI, custom nodes, and remaining dependencies to your venv
-   - Download all required models (Flux.1-dev, ControlNet, text encoders, PuLID, and more)
+   - Download all models to `HF_HOME` and create symlinks to `FaceEnhance/ComfyUI/models/`
 
 4. Run inference on one example:
 
@@ -77,11 +71,7 @@ A tool for improving facial consistency and quality in AI-generated images. Dram
 
 ## Gradio Demo
 
-A simple web interface for the face enhancement workflow. 
-
-1. Run `python demo.py`
-
-2. Go to http://localhost:7860. You may need to enable port forwarding.
+A simple web interface for the face enhancement workflow. Run `python demo.py`
 
 ## ComfyUI
 

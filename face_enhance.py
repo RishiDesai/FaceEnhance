@@ -236,10 +236,6 @@ def main(
         basicscheduler = NODE_CLASS_MAPPINGS["BasicScheduler"]()
         samplercustomadvanced = NODE_CLASS_MAPPINGS["SamplerCustomAdvanced"]()
         vaedecode = VAEDecode()
-        # faceembeddistance = NODE_CLASS_MAPPINGS["FaceEmbedDistance"]()
-        # display_any_rgthree = NODE_CLASS_MAPPINGS["Display Any (rgthree)"]()
-        # image_comparer_rgthree = NODE_CLASS_MAPPINGS["Image Comparer (rgthree)"]()
-        # saveimage = SaveImage()
 
         applypulidflux_133 = applypulidflux.apply_pulid_flux(
             weight=id_weight,
