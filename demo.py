@@ -104,7 +104,7 @@ def create_gradio_interface():
         2. Upload a high-quality face image
         3. Click 'Enhance Face'
 
-        Processing takes about 60 seconds.
+        Processing takes around 30 seconds.
         """, elem_id="instructions")
 
         gr.Markdown("---")
