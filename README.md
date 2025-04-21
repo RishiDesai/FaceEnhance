@@ -103,3 +103,38 @@ Run `python run_comfy.py`. There are two workflows:
 - **Out of memory errors**: If your GPU has less than 48 GB VRAM, install [Flux.1-dev at fp8 precision](https://huggingface.co/Comfy-Org/flux1-dev).
 - **Face detection issues**: This method works for photorealistic images of people. It may not work on cartoons, anime characters, or non-human subjects.
 - **Downloading models fails**: Check your Hugging Face token has proper permissions.
+
+### Examples
+
+<table>
+  <tr>
+    <th>Target image</th>
+    <th>Face image</th>
+    <th>Enhanced image</th>
+  </tr>
+  <tr>
+    <td><img src="examples/dany_gpt_1.png" alt="Dany Target 1" width="200"/></td>
+    <td><img src="examples/dany_face.jpg" alt="Dany Face" width="200"/></td>
+    <td><img src="examples/dany_enhanced_1.png" alt="Dany Enhanced 1" width="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="examples/dany_gpt_2.png" alt="Dany Target 2" width="200"/></td>
+    <td><img src="examples/dany_face.jpg" alt="Dany Face" width="200"/></td>
+    <td><img src="examples/dany_enhanced_2.png" alt="Dany Enhanced 2" width="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="examples/elon_gpt.png" alt="Elon Target" width="200"/></td>
+    <td><img src="examples/elon_face.png" alt="Elon Face" width="200"/></td>
+    <td><img src="examples/elon_enhanced.png" alt="Elon Enhanced" width="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="examples/tim_gpt_1.png" alt="Tim Target 1" width="200"/></td>
+    <td><img src="examples/tim_face.jpg" alt="Tim Face" width="200"/></td>
+    <td><img src="examples/tim_enhanced_1.png" alt="Tim Enhanced 1" width="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="examples/tim_gpt_2.png" alt="Tim Target 2" width="200"/></td>
+    <td><img src="examples/tim_face.jpg" alt="Tim Face" width="200"/></td>
+    <td><img src="examples/tim_enhanced_2.png" alt="Tim Enhanced 2" width="200"/></td>
+  </tr>
+</table>
