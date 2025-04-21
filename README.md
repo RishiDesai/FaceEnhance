@@ -1,14 +1,3 @@
----
-title: FaceEnhance
-emoji: 😎 
-colorFrom: red
-colorTo: green
-sdk: gradio
-sdk_version: 5.25.2
-app_file: demo.py
-pinned: false
----
-
 # FaceEnhance
 A tool for improving facial consistency and quality in AI-generated images. Dramatically enhance facial fidelity while preserving the original image's background, lighting, and composition.
 
