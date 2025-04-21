@@ -1,7 +1,7 @@
 import argparse
 import os
 import shutil
-from face_enhance import enhance_face
+from face_enhance import face_enhance
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Face Enhancement Tool')
@@ -69,7 +69,7 @@ def process_face(input_path, ref_path, output_path=None, id_weight=0.75):
     comfy_ref_path = os.path.relpath(scratch_ref, "./ComfyUI/input")
     comfy_input_path = os.path.relpath(scratch_input, "./ComfyUI/input")
 
-    enhance_face(comfy_ref_path, comfy_input_path, output_path, dist_image=f"{output_path}_dist.png", id_weight=id_weight)
+    face_enhance(comfy_ref_path, comfy_input_path, output_path, dist_image=f"{output_path}_dist.png", id_weight=id_weight)
 
     print(f"Enhanced image saved to: {output_path}")
     print(f"Working files are in: {scratch_dir}")

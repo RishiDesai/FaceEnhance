@@ -314,7 +314,7 @@ def save_comfy_images(images, output_dirs):
         pil_image.save(output_dirs[idx])
 
 
-def enhance_face(face_image: str, input_image: str, output_image: str, dist_image: str = None, positive_prompt: str = "", id_weight: float = 0.75):
+def face_enhance(face_image: str, input_image: str, output_image: str, dist_image: str = None, positive_prompt: str = "", id_weight: float = 0.75):
     initialize_models()  # Ensure models are loaded
     main(face_image, input_image, output_image, dist_image, positive_prompt, id_weight)
 
