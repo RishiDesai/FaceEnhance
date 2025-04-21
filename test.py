@@ -1,7 +1,7 @@
 import argparse
 import os
 import shutil
-from FaceEnhancementProd import enhance_face
+from face_enhance import enhance_face
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Face Enhancement Tool')
