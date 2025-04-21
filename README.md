@@ -1,5 +1,5 @@
 ---
-title: Face Enhancement
+title: FaceEnhance
 emoji: 😎 
 colorFrom: red
 colorTo: green
@@ -9,7 +9,7 @@ app_file: demo.py
 pinned: false
 ---
 
-# Face Enhance
+# FaceEnhance
 A tool for improving facial consistency and quality in AI-generated images. Dramatically enhance facial fidelity while preserving the original image's background, lighting, and composition.
 
 <div style="text-align: center;">
@@ -25,18 +25,17 @@ A tool for improving facial consistency and quality in AI-generated images. Dram
 
 ### Setup
 
-1. Set up your Hugging Face token:
-   - Create a token at [Hugging Face](https://huggingface.co/settings/tokens)
+1. Set up your Hugging Face account:
+   <details>
+   <summary>Instructions</summary>
+
    - Log into Hugging Face and accept their terms of service to download [Flux.1-dev](https://huggingface.co/black-forest-labs/FLUX.1-dev)
-   - Set the following environment variables:
-     ```
-     export HUGGINGFACE_TOKEN=your_token_here
-     export HF_HOME=/path/to/your/huggingface_cache
-     ```
-   - Models will be downloaded to `$HF_HOME` and symlinked to `FaceEnhance/ComfyUI/models/`
+   - Models will be downloaded to `HF_HOME` and symlinked to `FaceEnhance/ComfyUI/models/`
+
+   </details>
 
 2. Create the virtual environment:
-   ```
+   ```bash
    python -m venv venv
    source venv/bin/activate
    python -m pip install -r requirements.txt
@@ -53,7 +52,7 @@ A tool for improving facial consistency and quality in AI-generated images. Dram
    </details>
 
 3. Run the install script:
-   ```
+   ```bash
    python install.py
    ```
 
@@ -63,7 +62,7 @@ A tool for improving facial consistency and quality in AI-generated images. Dram
 
 4. Run inference on one example:
 
-   ```
+   ```bash
    python test.py --input examples/dany_gpt_1.png --ref examples/dany_face.jpg --out examples/dany_enhanced.png
    ```
 
