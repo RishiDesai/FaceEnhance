@@ -84,7 +84,7 @@ Run `python run_comfy.py`. There are two workflows:
 - The script and demo run a ComfyUI server ephemerally
 - Gradio demo is faster than the script because the models remain loaded in memory and ComfyUI server is booted up.
 - Images are saved in `FaceEnhance/ComfyUI/input/scratch/`
-- `FaceEnhancementProd.py` was created with the [ComfyUI-to-Python-Extension](https://github.com/pydn/ComfyUI-to-Python-Extension) and re-engineered for efficiency and function.
+- `face_enhance.py` was created with the [ComfyUI-to-Python-Extension](https://github.com/pydn/ComfyUI-to-Python-Extension) and re-engineered for efficiency and function.
 - Face cropping, upscaling, and captioning are unavailable; these will be added in an update.
 
 ### Troubleshooting
