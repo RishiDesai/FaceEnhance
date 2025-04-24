@@ -3,7 +3,7 @@ import random
 import sys
 from typing import Sequence, Mapping, Any, Union
 import torch
-import spaces
+# import spaces
 COMFYUI_PATH = "./ComfyUI"
 
 """
@@ -313,7 +313,7 @@ def save_comfy_images(images, output_dirs):
         pil_image = Image.fromarray(numpy_image)
         pil_image.save(output_dirs[idx])
 
-@spaces.GPU
+# @spaces.GPU
 def face_enhance(face_image: str, input_image: str, output_image: str, dist_image: str = None, positive_prompt: str = "", id_weight: float = 0.75):
     initialize_models()  # Ensure models are loaded
     main(face_image, input_image, output_image, dist_image, positive_prompt, id_weight)
