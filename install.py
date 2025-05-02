@@ -95,7 +95,7 @@ def download_huggingface_models():
 
             if not os.path.exists(target_path):
                 os.symlink(model_path, target_path)
-                print(f"✅ Linked: {file_name_only}")
+                print(f"✅ Linked: {model_path} to {target_path}")
             else:
                 print(f"✅ Already exists: {file_name_only}")
         except Exception as e:
