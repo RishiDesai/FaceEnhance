@@ -62,7 +62,7 @@ def download_huggingface_models():
     """Download required models from Hugging Face and symlink to ComfyUI models directory."""
     from huggingface_hub import hf_hub_download
     hf_models = [
-        # {"repo_id": "black-forest-labs/FLUX.1-dev", "filename": "flux1-dev.safetensors", "folder": "unet"},
+        {"repo_id": "black-forest-labs/FLUX.1-dev", "filename": "flux1-dev.safetensors", "folder": "unet"},
         {"repo_id": "black-forest-labs/FLUX.1-dev", "filename": "ae.safetensors", "folder": "vae"},
         {"repo_id": "Shakker-Labs/FLUX.1-dev-ControlNet-Union-Pro", "filename": "diffusion_pytorch_model.safetensors",
          "folder": "controlnet"},
@@ -219,6 +219,9 @@ def install(is_hf_space=False):
     download_huggingface_models()
     download_and_extract_antelopev2()
     print("🎉 Setup Complete!")
+    
+    print("\n📂 Listing installed models:")
+    run_cmd("ls -Rh ./ComfyUI/models/")
 
 if __name__ == "__main__":
     install()
