@@ -148,7 +148,7 @@ def create_gradio_interface():
     demo.queue(max_size=99)
     
     try:
-        demo.launch(share=True)
+        demo.launch()
     except OSError as e:
         print(f"Error starting server: {e}")
         sys.exit(1)
