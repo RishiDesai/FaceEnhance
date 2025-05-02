@@ -203,17 +203,17 @@ def install_hfdemo_dependencies():
     run_cmd("python -m pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu124")
     run_cmd("python -m pip install -r requirements.txt")
 
-    # If we're using persistent storage, set to "/data/huggingface_cache"
+    # If we're using persistent storage, change to "/data/huggingface_cache"
     HF_CACHE = "./huggingface_cache"
     os.environ['HF_HOME'] = HF_CACHE
     os.makedirs(HF_CACHE, exist_ok=True)
 
 
-def install(is_hf_demo=False):
+def install(is_hf_space=False):
     install_lfs_files()
     install_comfyui()
     install_custom_nodes()
-    if is_hf_demo:
+    if is_hf_space:
         install_hfdemo_dependencies()
     download_huggingface_models()
     download_and_extract_antelopev2()

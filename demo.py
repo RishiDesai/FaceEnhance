@@ -5,7 +5,7 @@ if "HF_DEMO" in os.environ:
     # Global variable to track if install() has been run; only for deploying on HF space
     INSTALLED = False
     if not INSTALLED:
-        install(is_hf_demo=True)
+        install(is_hf_space=True)
         INSTALLED = True
 
 import gradio as gr
