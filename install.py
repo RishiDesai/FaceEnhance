@@ -58,8 +58,8 @@ def install_comfyui():
     )
 
 
-def download_huggingface_models():
-    """Download required models from Hugging Face and symlink to ComfyUI models directory."""
+def download_huggingface_models(cache_models=True):
+    """Download required models from Hugging Face."""
     from huggingface_hub import hf_hub_download
     hf_models = [
         {"repo_id": "black-forest-labs/FLUX.1-dev", "filename": "flux1-dev.safetensors", "folder": "unet"},
@@ -79,13 +79,6 @@ def download_huggingface_models():
 
     for model in hf_models:
         try:
-            model_path = hf_hub_download(
-                repo_id=model["repo_id"],
-                filename=model["filename"],
-                cache_dir=os.getenv('HF_HOME'),
-                repo_type=model.get("repo_type", "model"),
-                token=os.getenv('HUGGINGFACE_TOKEN')
-            )
             target_dir = os.path.join(COMFYUI_PATH, "models", model["folder"])
             os.makedirs(target_dir, exist_ok=True)
 
@@ -93,11 +86,30 @@ def download_huggingface_models():
             file_name_only = filename_mappings.get(model["repo_id"], os.path.basename(model["filename"]))
             target_path = os.path.join(target_dir, file_name_only)
 
-            if not os.path.exists(target_path):
+            if os.path.exists(target_path):
+                print(f"✅ Already exists: {file_name_only}")
+                continue
+
+            if cache_models:
+                # Download to HF_HOME cache and create symlink
+                model_path = hf_hub_download(
+                    repo_id=model["repo_id"],
+                    filename=model["filename"],
+                    cache_dir=os.getenv('HF_HOME'),
+                    repo_type=model.get("repo_type", "model"),
+                    token=os.getenv('HUGGINGFACE_TOKEN')
+                )
                 os.symlink(model_path, target_path)
                 print(f"✅ Linked: {model_path} to {target_path}")
             else:
-                print(f"✅ Already exists: {file_name_only}")
+                hf_hub_download(
+                    repo_id=model["repo_id"],
+                    filename=model["filename"],
+                    local_dir=target_dir,
+                    repo_type=model.get("repo_type", "model"),
+                    token=os.getenv('HUGGINGFACE_TOKEN')
+                )
+                print(f"✅ Downloaded: {file_name_only} directly to {target_dir}")
         except Exception as e:
             print(f"❌ Failed to download {model['filename']}: {e}")
 
@@ -209,14 +221,14 @@ def install_hfdemo_dependencies():
     os.makedirs(HF_CACHE, exist_ok=True)
 
 
-def install(is_hf_space=False):
+def install(is_hf_space=False, cache_models=True):
     install_lfs_files()
     install_comfyui()
     install_custom_nodes()
     if is_hf_space:
         print("🔄 Installing HF spaces dependencies...")
         install_hfdemo_dependencies()
-    download_huggingface_models()
+    download_huggingface_models(cache_models)
     download_and_extract_antelopev2()
     print("🎉 Setup Complete!")
     
