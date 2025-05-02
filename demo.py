@@ -5,7 +5,7 @@ if "HF_DEMO" in os.environ:
     # Global variable to track if install() has been run; only for deploying on HF space
     INSTALLED = False
     if not INSTALLED:
-        install()
+        install(is_hf_demo=True)
         INSTALLED = True
 
 import gradio as gr
@@ -148,7 +148,7 @@ def create_gradio_interface():
     demo.queue(max_size=99)
     
     try:
-        demo.launch()
+        demo.launch(share=True)
     except OSError as e:
         print(f"Error starting server: {e}")
         sys.exit(1)

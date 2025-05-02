@@ -202,12 +202,19 @@ def install_custom_nodes():
     print("✅ Installed and updated all ComfyUI nodes.")
 
 
-def install():
+def install_hfdemo_dependencies():
+    run_cmd("python -m pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu124")
+    run_cmd("python -m pip install -r requirements.txt")
+
+
+def install(is_hf_demo=False):
     install_lfs_files()
     install_comfyui()
     install_custom_nodes()
     download_huggingface_models()
     download_and_extract_antelopev2()
+    if is_hf_demo:
+        install_hfdemo_dependencies()
     print("🎉 Setup Complete!")
 
 if __name__ == "__main__":
