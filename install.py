@@ -2,9 +2,6 @@ import os
 
 COMFYUI_PATH = "./ComfyUI"
 
-HF_CACHE = os.getenv('HF_HOME')
-os.makedirs(HF_CACHE, exist_ok=True)
-
 
 def run_cmd(command):
     """Run a shell command"""
@@ -85,8 +82,7 @@ def download_huggingface_models():
             model_path = hf_hub_download(
                 repo_id=model["repo_id"],
                 filename=model["filename"],
-                cache_dir=HF_CACHE
-            ,
+                cache_dir=os.getenv('HF_HOME'),
                 repo_type=model.get("repo_type", "model"),
                 token=os.getenv('HUGGINGFACE_TOKEN')
             )
@@ -203,18 +199,24 @@ def install_custom_nodes():
 
 
 def install_hfdemo_dependencies():
+    """Some steps specific to HF (ZeroGPU) spaces"""
     run_cmd("python -m pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu124")
     run_cmd("python -m pip install -r requirements.txt")
+
+    # If we're using persistent storage, set to "/data/huggingface_cache"
+    HF_CACHE = "./huggingface_cache"
+    os.environ['HF_HOME'] = HF_CACHE
+    os.makedirs(HF_CACHE, exist_ok=True)
 
 
 def install(is_hf_demo=False):
     install_lfs_files()
     install_comfyui()
     install_custom_nodes()
-    download_huggingface_models()
-    download_and_extract_antelopev2()
     if is_hf_demo:
         install_hfdemo_dependencies()
+    download_huggingface_models()
+    download_and_extract_antelopev2()
     print("🎉 Setup Complete!")
 
 if __name__ == "__main__":
