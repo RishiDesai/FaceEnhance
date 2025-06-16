@@ -62,14 +62,10 @@ def download_huggingface_models(cache_models=True):
     """Download required models from Hugging Face."""
     from huggingface_hub import hf_hub_download
     hf_models = [
-        {"repo_id": "black-forest-labs/FLUX.1-dev", "filename": "flux1-dev.safetensors", "folder": "unet"},
-        {"repo_id": "black-forest-labs/FLUX.1-dev", "filename": "ae.safetensors", "folder": "vae"},
+        {"repo_id": "Comfy-Org/flux1-dev", "filename": "flux1-dev-fp8.safetensors", "folder": "checkpoints"},
         {"repo_id": "Shakker-Labs/FLUX.1-dev-ControlNet-Union-Pro", "filename": "diffusion_pytorch_model.safetensors",
          "folder": "controlnet"},
         {"repo_id": "guozinan/PuLID", "filename": "pulid_flux_v0.9.1.safetensors", "folder": "pulid"},
-        {"repo_id": "comfyanonymous/flux_text_encoders", "filename": "t5xxl_fp16.safetensors",
-         "folder": "text_encoders"},
-        {"repo_id": "comfyanonymous/flux_text_encoders", "filename": "clip_l.safetensors", "folder": "text_encoders"},
     ]
 
     # More specific filenames

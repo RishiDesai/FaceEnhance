@@ -120,27 +120,19 @@ from nodes import (
     SaveImage,
     NODE_CLASS_MAPPINGS,
     CLIPTextEncode,
-    VAELoader,
+    CheckpointLoaderSimple,
     VAEEncode,
-    DualCLIPLoader,
     VAEDecode,
-    UNETLoader,
     ControlNetLoader,
     ControlNetApplyAdvanced,
 )
 
 @torch.inference_mode()
 def load_models():
-    dualcliploader = DualCLIPLoader()
-    dualcliploader_94 = dualcliploader.load_clip(
-        clip_name1="t5xxl_fp16.safetensors",
-        clip_name2="clip_l.safetensors",
-        type="flux",
-        device="default",
+    checkpointloadersimple = CheckpointLoaderSimple()
+    checkpoint = checkpointloadersimple.load_checkpoint(
+        ckpt_name="flux1-dev-fp8.safetensors"
     )
-
-    vaeloader = VAELoader()
-    vaeloader_95 = vaeloader.load_vae(vae_name="ae.safetensors")
 
     pulidfluxmodelloader = NODE_CLASS_MAPPINGS["PulidFluxModelLoader"]()
     pulidfluxmodelloader_44 = pulidfluxmodelloader.load_model(
@@ -160,19 +152,12 @@ def load_models():
         control_net_name="Flux_Dev_ControlNet_Union_Pro_ShakkerLabs.safetensors"
     )
 
-    unetloader = UNETLoader()
-    unetloader_93 = unetloader.load_unet(
-        unet_name="flux1-dev.safetensors", weight_dtype="default"
-    )
-
     return {
-        "dualcliploader_94": dualcliploader_94,
-        "vaeloader_95": vaeloader_95,
+        "checkpoint": checkpoint,
         "pulidfluxmodelloader_44": pulidfluxmodelloader_44,
         "pulidfluxevacliploader_45": pulidfluxevacliploader_45,
         "pulidfluxinsightfaceloader_46": pulidfluxinsightfaceloader_46,
         "controlnetloader_49": controlnetloader_49,
-        "unetloader_93": unetloader_93
     }
 
 def initialize_models():
@@ -195,17 +180,15 @@ def main(
     if COMFY_MODELS is None:
         raise ValueError("Models must be initialized before calling main(). Call initialize_models() first.")
     with torch.inference_mode():
-        dualcliploader_94 = COMFY_MODELS["dualcliploader_94"]
-        vaeloader_95 = COMFY_MODELS["vaeloader_95"]
+        checkpoint = COMFY_MODELS["checkpoint"]
         pulidfluxmodelloader_44 = COMFY_MODELS["pulidfluxmodelloader_44"]
         pulidfluxevacliploader_45 = COMFY_MODELS["pulidfluxevacliploader_45"]
         pulidfluxinsightfaceloader_46 = COMFY_MODELS["pulidfluxinsightfaceloader_46"]
         controlnetloader_49 = COMFY_MODELS["controlnetloader_49"]
-        unetloader_93 = COMFY_MODELS["unetloader_93"]
 
         cliptextencode = CLIPTextEncode()
         cliptextencode_23 = cliptextencode.encode(
-            text="", clip=get_value_at_index(dualcliploader_94, 0)
+            text="", clip=get_value_at_index(checkpoint, 1)
         )
 
         loadimage = LoadImage()
@@ -216,14 +199,14 @@ def main(
         vaeencode = VAEEncode()
         vaeencode_35 = vaeencode.encode(
             pixels=get_value_at_index(loadimage_40, 0),
-            vae=get_value_at_index(vaeloader_95, 0),
+            vae=get_value_at_index(checkpoint, 2),
         )
 
         randomnoise = NODE_CLASS_MAPPINGS["RandomNoise"]()
         randomnoise_39 = randomnoise.get_noise(noise_seed=random.randint(1, 2**64))
 
         cliptextencode_42 = cliptextencode.encode(
-            text=positive_prompt, clip=get_value_at_index(dualcliploader_94, 0)
+            text=positive_prompt, clip=get_value_at_index(checkpoint, 1)
         )
 
         ksamplerselect = NODE_CLASS_MAPPINGS["KSamplerSelect"]()
@@ -246,7 +229,7 @@ def main(
             fusion_weight_min=0,
             train_step=1000,
             use_gray=True,
-            model=get_value_at_index(unetloader_93, 0),
+            model=get_value_at_index(checkpoint, 0),
             pulid_flux=get_value_at_index(pulidfluxmodelloader_44, 0),
             eva_clip=get_value_at_index(pulidfluxevacliploader_45, 0),
             face_analysis=get_value_at_index(pulidfluxinsightfaceloader_46, 0),
@@ -266,7 +249,7 @@ def main(
             negative=get_value_at_index(cliptextencode_23, 0),
             control_net=get_value_at_index(setunioncontrolnettype_41, 0),
             image=get_value_at_index(loadimage_40, 0),
-            vae=get_value_at_index(vaeloader_95, 0),
+            vae=get_value_at_index(checkpoint, 2),
         )
 
         basicguider_122 = basicguider.get_guider(
@@ -291,7 +274,7 @@ def main(
 
         vaedecode_114 = vaedecode.decode(
             samples=get_value_at_index(samplercustomadvanced_1, 0),
-            vae=get_value_at_index(vaeloader_95, 0),
+            vae=get_value_at_index(checkpoint, 2),
         )
 
         save_comfy_images(get_value_at_index(vaedecode_114, 0), [output_image])
